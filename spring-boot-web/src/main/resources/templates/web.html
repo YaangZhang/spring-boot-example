@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Thymeleaf demo</title>
+</head>
+<body>
+
+<div>
+    <h2>赋值和拼接：</h2>
+    <p th:text="${username}">username</p>
+    <span th:text="'Welcome to our application, '+${username}+'!'"></span>
+
+    <h3>字符串拼接还有另外一种简洁的写法：</h3>
+    <span th:text="|Welcome to our application, ${username} !|"></span>
+    <hr>
+    <div>
+        <h1>条件判断 If/Unless</h1>
+        <a th:if="${flag == 'yes'}" th:href="@{http://favorites.ren/}"> home </a>
+        <a th:unless="${flag != 'no'}" th:href="@{http://www.ityouknow.com/}"> ityouknow </a>
+    </div>
+    <hr>
+    <div>
+        <h1>for 循环</h1>
+        <table>
+            <tr th:each="user, iterStat : ${users}">
+                <td th:text="${user.userName}">abc</td>
+                <td th:text="${user.passWord}">123456</td>
+                <td th:text="${user.email}">abc@qq.com</td>
+                <td th:text="${iterStat.index}">index</td>
+            </tr>
+        </table>
+        <!--iterStat 称作状态变量，属性有：
+
+        index，当前迭代对象的 index（从 0 开始计算）；
+        count，当前迭代对象的 index（从 1 开始计算）；
+        size，被迭代对象的大小；
+        current，当前迭代变量；
+        even/odd，布尔值，当前循环是否是偶数/奇数（从 0 开始计算）；
+        first，布尔值，当前循环是否是第一个；
+        last，布尔值，当前循环是否是最后一个。-->
+    </div>
+
+    <h1>URL</h1>
+    <a th:href="@{http://www.ityouknow.com/{type}(type=${type})}">link1</a>
+    <br/>
+    <a th:href="@{http://www.ityouknow.com/{pageId}/can-use-springcloud.html(pageId=${pageId})}">view</a>
+    <div th:style="'background:url(' + @{${img}} + ');'">
+        <br/><br/><br/>
+    </div>
+    <hr/>
+
+    <h1>三目运算</h1>
+    <input th:value="${name}"/>
+    <input th:value="${age gt 30 ? '中年':'年轻'}"/>
+    <!--gt：great than（大于）
+        ge：great equal（大于等于）
+        eq：equal（等于）
+        lt：less than（小于）
+        le：less equal（小于等于）
+        ne：not equal（不等于）-->
+    <br/>
+    <a th:if="${flag eq 'yes'}"  th:href="@{http://favorites.ren/}"> favorites </a>
+
+    <hr/>
+    <h1>switch 选择</h1>
+    <div th:switch="${sex}">
+        <p th:case="'woman'">她是一个姑娘...</p>
+        <p th:case="'man'">这是一个爷们!</p>
+        <!-- *: case的默认的选项 -->
+        <p th:case="*">未知性别的一个家伙。</p>
+    </div>
+
+    <hr/>
+    <div>
+        <h1>内联</h1>
+        <div th:inline="text" >
+            <p>Hello, [[${username}]] !</p>
+            <br/>
+        </div>
+        <div>
+            <h1>不使用内联</h1>
+            <p th:text="'Hello, ' + ${username} + ' !'"></p>
+            <br/>
+        </div>
+    </div>
+    <hr/>
+
+    <body>
+    <div >
+        <h1>基本对象</h1>
+        <p th:text="${#request.getAttribute('request')}">
+            <br/>
+        <p th:text="${session.session}"></p>
+        Established locale country: <span th:text="${#locale.country}">CN……</span>.
+        <!--Thymeleaf 包含了一些基本对象，可以用于我们的视图中，这些基本对象使用 # 开头。
+            #ctx：上下文对象
+            #vars：上下文变量
+            #locale：区域对象
+            #request：（仅 Web 环境可用）HttpServletRequest 对象
+            #response：（仅 Web 环境可用）HttpServletResponse 对象
+            #session：（仅 Web 环境可用）HttpSession 对象
+            #servletContext：（仅 Web 环境可用）ServletContext 对象-->
+    </div>
+
+    <hr/>
+    <h1>内嵌变量</h1>
+    <!--一系列 Utility 对象（内置于 Context 中），可以通过 # 直接访问。
+        dates：java.util.Date 的功能方法类
+        calendars：类似 #dates，面向 java.util.Calendar
+        numbers：格式化数字的功能方法类
+        strings：字符串对象的功能类，contains、startWiths、prepending/appending 等
+        objects：对 objects 的功能类操作
+        bools：对布尔值求值的功能方法
+        arrays：对数组的功能类方法
+        lists：对 lists 的功能类方法
+        sets：set 的实用方法
+        maps：map 的实用方法-->
+    <h3>1. dates</h3>
+    <!--格式化时间-->
+    <p th:text="${#dates.format(date, 'yyyy-MM-dd HH:mm:ss')}">neo</p>
+    <!--创建当前时间 精确到天-->
+    <p th:text="${#dates.createToday()}">neo</p>
+    <!--创建当前时间 精确到秒-->
+    <p th:text="${#dates.createNow()}">neo</p>
+
+    <h3>2. strings</h3>
+    <!--判断是否为空-->
+    <p th:text="${#strings.isEmpty(userName)}">userName</p>
+    <!--判断 list 是否为空-->
+    <p th:text="${#strings.listIsEmpty(users)}">userName</p>
+    <!--输出字符串长度-->
+    <p th:text="${#strings.length(userName)}">userName</p>
+    <!--拼接字符串-->
+    <p th:text="${#strings.concat(userName,userName,userName)}"></p>
+    <!--创建自定长度的字符串-->
+    <p th:text="${#strings.randomAlphanumeric(count)}">userName</p>
+
+    <hr/>
+    <h1>表达式</h1>
+    <h3>变量表达式</h3>
+  <!--  <span th:text="${book.author.name}"></span>
+    <li th:each="book : ${books}"></li>-->
+
+    </body>
+</div>
+</body>
+<script th:inline="javascript">
+    var name = [[${username}]] + ', Sebastian';
+    alert(name);
+</script>
+</html>

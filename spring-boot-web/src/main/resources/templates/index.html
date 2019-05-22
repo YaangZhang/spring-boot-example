@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en"  xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>index</title>
+</head>
+<body>
+<div>
+    <h1>this is index page!</h1>
+</div>
+
+<h3 th:text="${message}"> Hello World</h3>
+
+    <div th:insert="layout/copyright :: copyright"></div>
+    <div th:replace="layout/copyright :: copyright"></div>
+
+    <!--th:insert 和 th:replace 区别，insert 只是加载，replace 是替换。
+
+    Thymeleaf 3.0 推荐使用 th:insert 替换 2.0 的 th:replace。
+
+    layout 是文件夹地址，fileName 是文件名，语法这样写 layout/fileName:htmlhead，
+    其中，htmlhead 是指定义的代码片段，如 th:fragment="htmlhead"。-->
+
+</body>
+</html>
