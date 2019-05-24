@@ -24,15 +24,15 @@ public class SpringBootMybatisApplicationTests {
 //        userMapper.insert(new User("aa", "a123456", UserSexEnum.MAN));
         //删除
 //        userMapper.delete(2l);
-        User user = userMapper.getOne(1l);
+//        User user = userMapper.getOne(1l);
 //        user.setNikeName("smile");
 //        //修改
 //        userMapper.update(user);
 //        //查询
-//        List<User> users = userMapper.getAll();
-//        users.forEach(user -> {
+        List<User> users = userMapper.getAll();
+        users.forEach(user -> {
             System.out.println("user = "+user);
-//        });
+        });
     }
 
     @Test

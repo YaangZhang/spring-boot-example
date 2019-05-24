@@ -13,20 +13,20 @@ import java.util.List;
 @RestController
 public class UserController {
 
-    @Resource
-    UserMapper userMapper;
+//    @Resource
+//    UserMapper userMapper;
 
-    @RequestMapping("/users")
-    public List<User> getAll(){
-        List<User> users = userMapper.getAll();
-        return users;
-    }
-
-    @RequestMapping("/user/{id}")
-    public User getOne(@PathVariable("id")Long id){
-        User user = userMapper.getOne(id);
-        return user;
-    }
+//    @RequestMapping("/users")
+//    public List<User> getAll(){
+//        List<User> users = userMapper.getAll();
+//        return users;
+//    }
+//
+//    @RequestMapping("/user/{id}")
+//    public User getOne(@PathVariable("id")Long id){
+//        User user = userMapper.getOne(id);
+//        return user;
+//    }
 
 
 }

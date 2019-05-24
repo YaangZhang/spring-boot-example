@@ -1,13 +1,11 @@
-package com.sto.mapper;
+package com.sto.mapper.one;
 
 import com.sto.model.User;
 import com.sto.param.UserParam;
-import org.apache.ibatis.annotations.Mapper;
 
 import java.util.List;
 
-@Mapper()
-public interface UserMapper {
+public interface User1Mapper {
 
     List<User> getAll();
 
