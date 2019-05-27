@@ -1,4 +1,4 @@
-package com.sto.repository;
+package com.sto.repository.test1;
 
 import com.sto.model.User;
 import org.springframework.data.domain.Page;
@@ -16,10 +16,10 @@ import java.util.List;
  * 可以根据方法名自动生产 SQL，比如 findByUserName 会自动生产一个以 userName 为参数的查询方法，
  * 比如 findAll 会自动查询表里面的所有数据等
  */
-public interface UserRepository extends JpaRepository<User,Long> {
+public interface User1Repository extends JpaRepository<User,Long> {
 //    基本查询
     User findByUserName(String userName);
-    User findByUserNameOrEmail(String username,String email);
+    User findByUserNameOrEmail(String username, String email);
 
 
 //    自定义 SQL 查询
@@ -54,7 +54,7 @@ public interface UserRepository extends JpaRepository<User,Long> {
     @Transactional(timeout = 10)
     @Modifying
     @Query("update User set userName = ?1 where id = ?2")
-    int modifyById(String  userName, Long id);
+    int modifyById(String userName, Long id);
 
     @Transactional
     @Modifying
