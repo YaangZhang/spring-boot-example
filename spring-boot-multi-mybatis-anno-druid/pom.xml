@@ -8,10 +8,10 @@
         <version>2.1.5.RELEASE</version>
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
-    <groupId>com.eto</groupId>
-    <artifactId>spring-boot-mybatis-annotation</artifactId>
+    <groupId>com.sto</groupId>
+    <artifactId>spring-boot-multi-mybatis-anno-druid</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <name>spring-boot-mybatis-annotation</name>
+    <name>spring-boot-multi-mybatis-anno-druid</name>
     <description>Demo project for Spring Boot</description>
 
     <properties>
@@ -28,7 +28,6 @@
             <artifactId>mybatis-spring-boot-starter</artifactId>
             <version>2.0.1</version>
         </dependency>
-        <!--Spring Boot 集成 Druid-->
         <dependency>
             <groupId>com.alibaba</groupId>
             <artifactId>druid-spring-boot-starter</artifactId>

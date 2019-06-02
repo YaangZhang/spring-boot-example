@@ -32,8 +32,8 @@ public class UserMapperTest {
     }
       @Test
     public void getListByUserSex() throws Exception {
-        userMapper.delete(5L);
-        userMapper.delete(6L);
+//        userMapper.delete(5L);
+//        userMapper.delete(6L);
 //          User one = userMapper.getOne(8L);
 //          one.setNikeName("昵称走一波");
 //          one.setUserSex(UserSexEnum.MAN);

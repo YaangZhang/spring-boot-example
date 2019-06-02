@@ -1,8 +1,9 @@
-package com.eto.springbootmybatisannotation.mapper;
+package com.sto.springbootmultimybatisannodruid.mapper.test2;
 
-import com.eto.springbootmybatisannotation.enums.UserSexEnum;
-import com.eto.springbootmybatisannotation.model.User;
-import com.eto.springbootmybatisannotation.param.UserParam;
+import com.sto.springbootmultimybatisannodruid.enums.UserSexEnum;
+import com.sto.springbootmultimybatisannodruid.mapper.UserSql;
+import com.sto.springbootmultimybatisannodruid.model.User;
+import com.sto.springbootmultimybatisannodruid.param.UserParam;
 import org.apache.ibatis.annotations.*;
 
 import java.util.List;
@@ -16,7 +17,7 @@ import java.util.Map;
  *
  * 使用 # 符号和 $ 符号的不同： # 会对 SQL 进行预处理，使用 $ 时拼接 SQL，建议使用 #，使用 $ 有 SQL 注入的可能性
  */
-public interface UserMapper {
+public interface User2Mapper {
 
     @Select("select * from users")
     @Results({
