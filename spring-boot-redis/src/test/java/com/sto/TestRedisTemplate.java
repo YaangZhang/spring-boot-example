@@ -112,11 +112,11 @@ public class TestRedisTemplate {
     @Test
     public void testList() {
         ListOperations<String, String> list = redisTemplate.opsForList();
-//        list.leftPush("list","it");
-//        list.leftPush("list","you");
-//        list.leftPush("list","know");
-//        String value=(String)list.leftPop("list");
-//        System.out.println("list value :"+value.toString());
+        list.leftPush("list","it");
+        list.leftPush("list","you");
+        list.leftPush("list","know");
+        String value=(String)list.leftPop("list");
+        System.out.println("list value :"+value.toString());
         //在 list 列表里
         list.remove("list", 3,"it");
         List<String> values=list.range("list",0,2);
@@ -141,6 +141,28 @@ public class TestRedisTemplate {
         Set<String> values=set.members(key);
         for (String v:values){
             System.out.println("set value :"+v);
+        }
+    }
+
+    @Test
+    public void testZset(){
+        String key="zset";
+        redisTemplate.delete(key);
+        ZSetOperations<String, String> zset = redisTemplate.opsForZSet();
+        zset.add(key,"it",1);
+        zset.add(key,"you",6);
+        zset.add(key,"know",4);
+        zset.add(key,"neo",3);
+//Get elements between {@code start} and {@code end} from sorted set.
+        Set<String> zsets=zset.range(key,0,3);
+        for (String v:zsets){
+            System.out.println("zset value :"+v);
+        }
+        System.out.println("…………………………………………………………………………………………");
+        //Get elements where score is between {@code min} and {@code max} from sorted set.
+        Set<String> zsetB=zset.rangeByScore(key,0,3);
+        for (String v:zsetB){
+            System.out.println("zsetB value :"+v);
         }
     }
 
