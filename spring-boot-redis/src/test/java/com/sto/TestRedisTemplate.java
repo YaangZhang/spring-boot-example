@@ -144,6 +144,25 @@ public class TestRedisTemplate {
         }
     }
 
+//    set 中 difference() 函数会把 key 1 中不同于 key 2 的数据对比出来
+    @Test
+    public void testDiff(){
+        SetOperations<String, String> set = redisTemplate.opsForSet();
+        String key1="setMore1";
+        String key2="setMore2";
+        set.add(key1,"it");
+        set.add(key1,"you");
+        set.add(key1,"you");
+        set.add(key1,"know");
+        set.add(key2,"xx");
+        set.add(key2,"know");
+        Set<String> diffs=set.difference(key1,key2);// it you
+//        Set<String> diffs=set.difference(key2,key1);// xx
+        for (String v:diffs){
+            System.out.println("diffs set value :"+v);
+        }
+    }
+
  @Test
     public void testStr(){
      String token = "testdemo11111111111119";
