@@ -11,6 +11,7 @@
 
     <modules>
         <module>banner</module>
+        <module>spring-boot-bigdata</module>
         <module>spring-boot-hello</module>
         <module>spring-boot-jdbc</module>
         <module>spring-boot-jsp</module>
