@@ -1,4 +1,4 @@
-package com.sto.modle.service;
+package com.sto.service;
 
 import org.apache.commons.lang3.RandomStringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
