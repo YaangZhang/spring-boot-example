@@ -35,7 +35,7 @@ public class SecondaryConfig {
         return builder
                 .dataSource(secondaryDataSource)
                 .properties(vendorProperties)
-                .packages("com.sto.model")
+                .packages("com.sto.com.sto.model")
                 .persistenceUnit("secondaryPersistenceUnit")
                 .build();
     }

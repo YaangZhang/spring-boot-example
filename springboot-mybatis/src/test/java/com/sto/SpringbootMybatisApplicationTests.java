@@ -23,7 +23,7 @@ public class SpringbootMybatisApplicationTests {
     @Test
     public void testUser()  {
         //增加
-        userMapper.insert(new User("aa", "qazwsx", UserSexEnum.MAN));
+//        userMapper.insert(new User("aa", "qazwsx", UserSexEnum.MAN));
         //删除
 //        userMapper.delete(2l);
 //        User user = userMapper.getOne(1l);

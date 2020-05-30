@@ -2,7 +2,7 @@ package com.sto;
 
 import com.sto.model.UserDetail;
 import com.sto.param.UserDetailParam;
-import com.sto.service.UserDetailService;
+import service.UserDetailService;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.boot.test.context.SpringBootTest;

@@ -143,6 +143,13 @@ public class TestRedisTemplate {
             System.out.println("set value :"+v);
         }
     }
+    @Test
+    public void testZSet() {
+        String key="set";
+        ZSetOperations zSet = redisTemplate.opsForZSet();
+        Set range = zSet.range("gemini:program:asset:1:list", 1, 11);
+        System.out.println(range);
+    }
 
 //    set 中 difference() 函数会把 key 1 中不同于 key 2 的数据对比出来
     @Test

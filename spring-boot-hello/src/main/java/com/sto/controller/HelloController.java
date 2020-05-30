@@ -15,12 +15,17 @@ public class HelloController {
 
     /**
      * http://localhost:8071/hi?hi=rose
-     * @param hi
+     * @param name
      * @return
      */
-    @RequestMapping("/hi")
-    public String hi(String hi) {
-        return "Hello Spring Boot 2.0! "+hi;
+    @RequestMapping(value = "/hi", params = {"name"})
+    public String hi(String name) {
+        return "Hello Spring Boot 2.0! "+name;
+    }
+
+ @RequestMapping(value = "/hi", params = {"name", "age"})
+    public String hi(String name, int age) {
+        return age+"  Hello Spring Boot 2.0! "+name;
     }
 
     /**

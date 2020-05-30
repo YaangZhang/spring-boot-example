@@ -45,8 +45,12 @@ public class CacheTest {
 //        Cache.put(key, 100L, 1000);
 //        System.out.println("map.size = "+Cache.size());
 
-        test1(key);
-        test2(key);
+//        test1(key);
+//        test2(key);
+
+        int a = 2055543210;
+        int b = -1234560898;
+        System.out.println(a - b);
 
     }
 

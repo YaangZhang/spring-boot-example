@@ -44,7 +44,7 @@ public class PrimaryConfig {
         return builder
                 .dataSource(primaryDataSource)
                 .properties(vendorProperties)
-                .packages("com.sto.model") //设置实体类所在位置
+                .packages("com.sto.com.sto.model") //设置实体类所在位置
                 .persistenceUnit("primaryPersistenceUnit")
                 .build();
     }

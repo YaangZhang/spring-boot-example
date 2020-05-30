@@ -3,12 +3,10 @@ package com.sto.config;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.mybatis.spring.SqlSessionFactoryBean;
 import org.mybatis.spring.SqlSessionTemplate;
-import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.boot.jdbc.DataSourceBuilder;
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
 import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
 import org.springframework.jdbc.datasource.DataSourceTransactionManager;
@@ -22,8 +20,8 @@ import javax.sql.DataSource;
  * 其中需要指定分库的 Mapper 包路径。
  */
 //将 SqlSessionTemplate 注入到对应的 Mapper 包路径下，这样这个包下面的 Mapper 都会使用第一个数据源来进行数据库操作
-@Configuration
-@MapperScan(basePackages = "com.sto.mapper.two", sqlSessionTemplateRef = "twoSqlSessionTemplate")
+//@Configuration
+//@MapperScan(basePackages = "com.sto.mapper.two", sqlSessionTemplateRef = "twoSqlSessionTemplate")
 public class DataSource2Config {
 //    1、首先加载配置的数据源
     @Bean(name = "twoDataSource")

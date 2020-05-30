@@ -13,6 +13,7 @@ import java.util.concurrent.TimeUnit;
 
 @Service
 public class RedisService {
+
     @Autowired
     private RedisTemplate redisTemplate;
 
@@ -187,8 +188,15 @@ public class RedisService {
      * @param scoure1
      * @return
      */
-    public Set<Object> rangeByScore(String key,double scoure,double scoure1){
+    public Set<Object> zrangeByScore(String key,double scoure,double scoure1){
         ZSetOperations<String, Object> zset = redisTemplate.opsForZSet();
         return zset.rangeByScore(key, scoure, scoure1);
     }
+
+    public Set<Object> zrange(String key,long scoure,long scoure1){
+        ZSetOperations<String, Object> zset = redisTemplate.opsForZSet();
+        return zset.range(key, scoure, scoure1);
+    }
+
+
 }

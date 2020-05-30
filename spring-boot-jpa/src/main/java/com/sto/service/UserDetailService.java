@@ -1,4 +1,4 @@
-package com.sto.service;
+package service;
 
 import com.sto.model.UserDetail;
 import com.sto.param.UserDetailParam;
