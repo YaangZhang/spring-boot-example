@@ -2,7 +2,6 @@ package com.sto;
 
 import com.sto.model.UserDetail;
 import com.sto.param.UserDetailParam;
-import service.UserDetailService;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -11,6 +10,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.test.context.junit4.SpringRunner;
+import service.UserDetailService;
 
 import javax.annotation.Resource;
 
