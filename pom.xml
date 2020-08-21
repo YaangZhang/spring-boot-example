@@ -24,6 +24,7 @@
         <module>spring-boot-mybatis</module>
         <module>spring-boot-mongodb</module>
         <module>spring-boot-es</module>
+        <module>spring-boot-suanfa</module>
     </modules>
 
     <dependencyManagement>
