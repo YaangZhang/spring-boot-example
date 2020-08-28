@@ -25,6 +25,8 @@
         <module>spring-boot-mongodb</module>
         <module>spring-boot-es</module>
         <module>spring-boot-suanfa</module>
+        <module>TarsosDSP-demo</module>
+        <module>TarsosDSP-jar-demo</module>
     </modules>
 
     <dependencyManagement>
