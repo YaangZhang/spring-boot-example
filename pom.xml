@@ -27,6 +27,9 @@
         <module>spring-boot-suanfa</module>
         <module>TarsosDSP-demo</module>
         <module>TarsosDSP-jar-demo</module>
+        <module>jdk-thread</module>
+        <module>spring-aop</module>
+        <module>spring-shejimoshi</module>
     </modules>
 
     <dependencyManagement>
