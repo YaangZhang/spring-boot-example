@@ -24,9 +24,9 @@
         <module>spring-boot-mybatis</module>
         <module>spring-boot-mongodb</module>
         <module>spring-boot-es</module>
-        <module>jdk-thread</module>
-        <module>spring-aop</module>
-        <module>spring-shejimoshi</module>
+        <module>spring-boot-suanfa</module>
+        <module>TarsosDSP-demo</module>
+        <module>TarsosDSP-jar-demo</module>
     </modules>
 
     <dependencyManagement>
