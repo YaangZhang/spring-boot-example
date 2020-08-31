@@ -187,13 +187,13 @@ public class AudioUtils {
         AudioUtils utils  = AudioUtils.getInstance();
         // utils.playMP3("D:/data/video/22条商规.mp3");
 
-        InputStream inputStream = utils.convertMP32Pcm("D:/data/video/22条商规.mp3", "D:/data/video/xx2.pcm");
-        InputStream inputStream1 = speechPitchShift(inputStream, 0.6, 0.6);
-        //将音频转化为  pcm的格式保存下来
-        inputStreamToFile(inputStream1, new File("D:/data/video/xx2New.pcm"));
-
-        convertAudioFiles("D:/data/video/xx2.pcm", "D:/data/video/xx2.mp3");
-        convertAudioFiles("D:/data/video/xx2New.pcm", "D:/data/video/xx2New.mp3");
+        // InputStream inputStream = utils.convertMP32Pcm("D:/data/video/22条商规.mp3", "D:/data/video/22条商规pcm.pcm");
+        // InputStream inputStream1 = speechPitchShift(inputStream, 0.6, 0.6);
+        // //将音频转化为  pcm的格式保存下来
+        // // inputStreamToFile(inputStream1, new File("D:/data/video/22条商规pcm.pcm"));
+        //
+        // convertAudioFiles("D:/data/video/22条商规pcm.pcm", "D:/data/video/22条商规mp32.mp3");
+        convertAudioFiles("D:/data/video/xx22New.pcm", "D:/data/video/xx22New.mp3");
     }
 
     /**
@@ -224,7 +224,7 @@ public class AudioUtils {
         header.BitsPerSample = 16;
         header.Channels = 1;
         header.FormatTag = 0x0001;
-        header.SamplesPerSec = 32000;//正常速度是8000，这里写成了16000，速度加快一倍
+        header.SamplesPerSec = 16000;//正常速度是8000，这里写成了16000，速度加快一倍
         header.BlockAlign = (short) (header.Channels * header.BitsPerSample / 8);
         header.AvgBytesPerSec = header.BlockAlign * header.SamplesPerSec;
         header.DataHdrLeth = PCMSize;
@@ -246,5 +246,6 @@ public class AudioUtils {
         System.out.println("PCM Convert to MP3 OK!");
         return "ok";
     }
+
 
 }

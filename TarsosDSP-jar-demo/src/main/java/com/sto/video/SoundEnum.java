@@ -114,6 +114,7 @@ public enum SoundEnum {
             assert h.length == 44; //WAV标准，头部应该是44字节
             return h;
         } catch (IOException e) {
+            System.out.println("pcm2wav met error, bytes : "+bytes);
             // log.error("pcm2wav-error", e);
         }
         return null;
