@@ -69,6 +69,7 @@ public class MediaUtil {
      * 当前系统安装好ffmpeg程序并配置好相应的环境变量后，值为ffmpeg可执行程序文件在实际系统中的绝对路径
      */
 	private static String FFMPEG_PATH = "D://tools/ffmpeg-20200826-8f2c1f2-win64-static/bin/ffmpeg.exe"; // /usr/bin/ffmpeg
+	// private static String FFMPEG_PATH = "ffmpeg"; // /usr/bin/ffmpeg
 
 
     /**
@@ -490,8 +491,9 @@ public class MediaUtil {
      * 只能抽取成MP3文件
      * @param videoFile 源视频文件
      * @param audioFile 从源视频提取的音频文件
+     * @param avType    抽取的媒体类型 1:audio、0:video
      */
-	public static void getAudioFromVideo(File videoFile, File audioFile) {
+	public static void getAudioFromVideo(File videoFile, File audioFile, int avType) {
 		if (null == videoFile || !videoFile.exists()) {
 			throw new RuntimeException("源视频文件不存在： ");
 		}
@@ -499,9 +501,9 @@ public class MediaUtil {
 			throw new RuntimeException("要提取的音频路径为空：");
 		}
         String format = getFormat(audioFile);
-        if (!isLegalFormat(format, AUDIO_TYPE)) {
-            throw new RuntimeException("无法生成指定格式的音频：" + format + " 请检查要输出的音频文件是否是AAC类型");
-        }
+        // if (!isLegalFormat(format, AUDIO_TYPE)) {
+        //     throw new RuntimeException("无法生成指定格式的音频：" + format + " 请检查要输出的音频文件是否是AAC类型");
+        // }
 		try {
 			if (!audioFile.exists()) {
 				audioFile.createNewFile();
@@ -510,10 +512,16 @@ public class MediaUtil {
 			List<String> commond = new ArrayList<String>();
 			commond.add("-i");
 			commond.add(videoFile.getAbsolutePath());
+            // if (avType == 1) {
+            //     commond.add("-vn"); // no video，去除视频信息
+            // } else
+            if (avType == 0) {
+                commond.add("-an"); // no video，去除视频信息
+            }
 			// commond.add("-vn"); // no video，去除视频信息
 			// commond.add("-y");
-			// commond.add("-acodec");
-			// commond.add("copy");
+			commond.add("-acodec");
+			commond.add("copy");
 			commond.add(audioFile.getAbsolutePath());
 			executeCommand(commond);
 		} catch (Exception e) {
@@ -859,13 +867,18 @@ public class MediaUtil {
 		return format;
 	}
 
-    public static void main(String[] args) {
-        boolean executable = isExecutable();
-        System.out.println(executable);
+    public static void main(String[] args) throws Exception{
+        // boolean executable = isExecutable();
+        // System.out.println(executable);
 
-        File videoFile = new File("D:/data/video/test.mp4");
-        File audioFile = new File("D:/data/video/test2.aac");
-        getAudioFromVideo(videoFile, audioFile);
+        // vodieToPcm("D:/data/images/22条商规.mp3", "D:/data/images/22条商规2pcm.pcm", FFMPEG_PATH);
+
+        File videoFile = new File("D:/data/video/123.mp4");
+        File audioFile = new File("D:/data/video/123.mp3");
+        File videoFile2 = new File("D:/data/video/123mp4.mp4");
+        getAudioFromVideo(videoFile, audioFile, 1);
+        // getAudioFromVideo(videoFile, videoFile2, 0);
+        // avMerge("D:/data/images/testmp42.mp4", "D:/data/images/test2mp3.mp3", "D:/data/images/testmp3mp4.mp4");
     }
 
     /**
@@ -927,4 +940,54 @@ public class MediaUtil {
         }
     }
 
+    public static void avMerge(String vedioUrl,String audioUrl,String newvideoUrl){
+        if (StringUtils.isBlank(vedioUrl)) {
+            throw new RuntimeException("源视频文件不存在： ");
+        }
+        if (StringUtils.isBlank(audioUrl)) {
+            throw new RuntimeException("源音频文件路径为空：");
+        }
+
+        try {
+            List<String> commond = new ArrayList<String>();
+            commond.add("-i");
+            commond.add(vedioUrl);
+            commond.add("-i");
+            commond.add(audioUrl);
+            commond.add(newvideoUrl);
+            executeCommand(commond);
+        } catch (Exception e) {
+            log.error("--- 合并视频、音频信息的过程出错 --- 错误信息： " + e.getMessage());
+        }
+    }
+
+    /**
+     * 视频/音频转pcm格式文件 -f s16le -ar 44100 -ac 1 -acodec pcm_s16le
+     * @param vedioUrl 源文件
+     * @param pcmUrl 目标文件
+     * @param ffmpegUrl ffmpeg.exe安装路径
+     * @throws InterruptedException
+     * @throws IOException
+     */
+    public static void vodieToPcm(String vedioUrl,String pcmUrl,String ffmpegUrl) throws InterruptedException, IOException {
+        List commend = new ArrayList();
+        commend.add(ffmpegUrl);
+        commend.add("-y");
+        commend.add("-i");
+        commend.add(vedioUrl);
+        commend.add("-acodec");
+        commend.add("pcm_s16le");
+        commend.add("-f");
+        commend.add("s16le");
+        commend.add("-ac");
+        commend.add("1");
+        commend.add("-ar");
+        commend.add("16000");
+        commend.add(pcmUrl);
+        ProcessBuilder builder = new ProcessBuilder();
+        builder.command(commend);
+        builder.redirectErrorStream(true);
+        Process process = builder.start();
+        process.waitFor();// 等待进程执行结束
+    }
 }

@@ -9,6 +9,8 @@ import javazoom.spi.mpeg.sampled.file.MpegAudioFileReader;
 
 import javax.sound.sampled.*;
 import java.io.*;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * 创建日期:2018年1月14日
@@ -187,13 +189,13 @@ public class AudioUtils {
         AudioUtils utils  = AudioUtils.getInstance();
         // utils.playMP3("D:/data/video/22条商规.mp3");
 
-        // InputStream inputStream = utils.convertMP32Pcm("D:/data/video/22条商规.mp3", "D:/data/video/22条商规pcm.pcm");
-        // InputStream inputStream1 = speechPitchShift(inputStream, 0.6, 0.6);
-        // //将音频转化为  pcm的格式保存下来
-        // // inputStreamToFile(inputStream1, new File("D:/data/video/22条商规pcm.pcm"));
-        //
-        // convertAudioFiles("D:/data/video/22条商规pcm.pcm", "D:/data/video/22条商规mp32.mp3");
-        convertAudioFiles("D:/data/video/xx22New.pcm", "D:/data/video/xx22New.mp3");
+        InputStream inputStream = utils.convertMP32Pcm("D:/data/images/22条商规.mp3", "D:/data/images/22条商规pcm.pcm");
+        InputStream inputStream1 = speechPitchShift(inputStream, 0.6, 0.6);
+        //将音频转化为  pcm的格式保存下来
+        // inputStreamToFile(inputStream1, new File("D:/data/video/22条商规pcm.pcm"));
+
+        convertAudioFiles("D:/data/images/22条商规2pcm.pcm", "D:/data/images/22条商规2mp32.mp3");
+        // convertAudioFiles("D:/data/video/xx22New.pcm", "D:/data/video/xx22New.mp3");
     }
 
     /**
