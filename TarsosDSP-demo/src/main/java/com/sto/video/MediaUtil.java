@@ -4,21 +4,18 @@ package com.sto.video;
 // import media.domain.MusicMetaInfo;
 // import media.domain.VideoMetaInfo;
 // import media.domain.gif.AnimatedGifEncoder;
+
 import org.apache.commons.collections4.CollectionUtils;
-import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.imageio.ImageIO;
-import java.awt.image.BufferedImage;
 import java.io.*;
 import java.sql.Time;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
@@ -68,7 +65,8 @@ public class MediaUtil {
      * FFmpeg程序执行路径
      * 当前系统安装好ffmpeg程序并配置好相应的环境变量后，值为ffmpeg可执行程序文件在实际系统中的绝对路径
      */
-	private static String FFMPEG_PATH = "D://tools/ffmpeg-20200826-8f2c1f2-win64-static/bin/ffmpeg.exe"; // /usr/bin/ffmpeg
+//	private static String FFMPEG_PATH = "D://tools/ffmpeg-20200826-8f2c1f2-win64-static/bin/ffmpeg.exe"; // /usr/bin/ffmpeg
+	private static String FFMPEG_PATH = "D://soft/ffmpeg-20200826-8f2c1f2-win64-static/bin/ffmpeg.exe"; // /usr/bin/ffmpeg
 
 
     /**
@@ -510,10 +508,11 @@ public class MediaUtil {
 			List<String> commond = new ArrayList<String>();
 			commond.add("-i");
 			commond.add(videoFile.getAbsolutePath());
-			// commond.add("-vn"); // no video，去除视频信息
+
 			// commond.add("-y");
-			// commond.add("-acodec");
-			// commond.add("copy");
+			 commond.add("-acodec");
+			 commond.add("copy");
+            commond.add("-vn"); // no video，去除视频信息
 			commond.add(audioFile.getAbsolutePath());
 			executeCommand(commond);
 		} catch (Exception e) {
