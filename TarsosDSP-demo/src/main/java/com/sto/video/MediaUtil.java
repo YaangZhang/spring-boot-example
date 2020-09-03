@@ -500,7 +500,7 @@ public class MediaUtil {
 		if (null == audioFile) {
 			throw new RuntimeException("要提取的音频路径为空：");
 		}
-        String format = getFormat(audioFile);
+        // String format = getFormat(audioFile);
         // if (!isLegalFormat(format, AUDIO_TYPE)) {
         //     throw new RuntimeException("无法生成指定格式的音频：" + format + " 请检查要输出的音频文件是否是AAC类型");
         // }
@@ -520,8 +520,8 @@ public class MediaUtil {
             }
 			// commond.add("-vn"); // no video，去除视频信息
 			// commond.add("-y");
-			commond.add("-acodec");
-			commond.add("copy");
+			// commond.add("-acodec");
+			// commond.add("copy");
 			commond.add(audioFile.getAbsolutePath());
 			executeCommand(commond);
 		} catch (Exception e) {
@@ -868,17 +868,17 @@ public class MediaUtil {
 	}
 
     public static void main(String[] args) throws Exception{
-        // boolean executable = isExecutable();
-        // System.out.println(executable);
+        boolean executable = isExecutable();
+        System.out.println(executable);
 
         // vodieToPcm("D:/data/images/22条商规.mp3", "D:/data/images/22条商规2pcm.pcm", FFMPEG_PATH);
 
-        File videoFile = new File("D:/data/video/123.mp4");
-        File audioFile = new File("D:/data/video/123.mp3");
-        File videoFile2 = new File("D:/data/video/123mp4.mp4");
+        File videoFile = new File("D:/data/images/bxqy.mp4");
+        File audioFile = new File("D:/data/images/bxqy3.mp3");
+        File videoFile2 = new File("D:/data/images/bxqymp42.mp4");
         getAudioFromVideo(videoFile, audioFile, 1);
         // getAudioFromVideo(videoFile, videoFile2, 0);
-        // avMerge("D:/data/images/testmp42.mp4", "D:/data/images/test2mp3.mp3", "D:/data/images/testmp3mp4.mp4");
+        avMerge("D:/data/images/testmp42.mp4", "D:/data/images/test2mp3.mp3", "D:/data/images/testmp3mp4.mp4");
     }
 
     /**

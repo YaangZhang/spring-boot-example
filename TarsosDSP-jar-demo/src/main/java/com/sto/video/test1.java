@@ -33,8 +33,8 @@ public class test1 {
     public static void main(String[] args) throws Exception{
 
         //这里返回的是pcm格式的音频
-        byte[] bytes = speechPitchShiftMp3("D:/data/images/22条商规.mp3", 0.6, 0.6);
-        File tempFile = new File("D:/data/images/22条商规pcm.pcm");
+        byte[] bytes = speechPitchShiftMp3("D:/data/images/bxqy.mp3", 1.55, 1.55);
+        File tempFile = new File("D:/data/images/bxqypcm4.pcm");
         //如果需要转成wav则需要给pcmBytes增加一个头部信息  116.31.48 37.48.39
         //TarsosDSP中也有输出Wav格式音频的处理器，这里没有使用。
         byte[] wavHeader = pcm2wav(bytes);
@@ -46,7 +46,7 @@ public class test1 {
 
         // 对于各种声音类型，以及所需添加的处理器，还有处理器参数代码，将在本文最后给出。
         //如果需要转mp3格式的，也可以给我留言，我会加上。
-        convertAudioFiles("D:/data/images/22条商规pcm.pcm", "D:/data/images/22条商规mp3.mp3");
+        convertAudioFiles("D:/data/images/bxqypcm4.pcm", "D:/data/images/bxqymp34.mp3");
     }
 
     /**
@@ -89,10 +89,10 @@ public class test1 {
 //        dispatcher.addAudioProcessor(new NoiseGenerator(0.2   ));
 
         /** 增益处理器  增益为1，则无任何反应。 增益大于1表示音量增加a -- 有反应 **/
-       dispatcher.addAudioProcessor(new GainProcessor(10));
+       // dispatcher.addAudioProcessor(new GainProcessor(10));
 
         /**镶边效果 -- 有反应 **/
-       dispatcher.addAudioProcessor(new FlangerEffect(64, 0.3, 16000, 16000));// 回声效果
+       // dispatcher.addAudioProcessor(new FlangerEffect(64, 0.3, 16000, 16000));// 回声效果
 //        dispatcher.addAudioProcessor(new FlangerEffect(1 << 4, 0.8, 8000, 2000));// 感冒
 //        dispatcher.addAudioProcessor(new ZeroCrossingRateProcessor());//感冒
 
@@ -103,7 +103,7 @@ public class test1 {
 //        dispatcher.addAudioProcessor(new FadeIn(5));
 
         /** 在信号上添加回声效果。echoLength以秒为单位  elay回声的衰减，介于0到1之间的值。1表示无衰减，0表示立即衰减 **/
-        dispatcher.addAudioProcessor(new DelayEffect(0.2, 0.24, 12000) );
+        // dispatcher.addAudioProcessor(new DelayEffect(0.2, 0.24, 12000) );
 
         /** 调幅噪声 -- 将声音转换为噪声**/
 //        dispatcher.addAudioProcessor(new AmplitudeModulatedNoise());
