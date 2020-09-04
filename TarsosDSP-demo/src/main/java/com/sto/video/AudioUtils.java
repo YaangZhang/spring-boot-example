@@ -39,21 +39,21 @@ public class AudioUtils {
      * MP3转换PCM文件方法
      * 
      * @param mp3filepath 原始文件路径
-     * @param pcmfilepath 转换文件的保存路径
+     * @param pcmfile 转换文件
      * @return 
      * @throws Exception
      */
-    public InputStream convertMP32Pcm(String mp3filepath, String pcmfilepath){
+    public void convertMP32Pcm(String mp3filepath, File pcmfile){
         try {
             //获取文件的音频流，pcm的格式
             AudioInputStream audioInputStream = getPcmAudioInputStream(mp3filepath);
             //将音频转化为  pcm的格式保存下来
-            AudioSystem.write(audioInputStream, AudioFileFormat.Type.WAVE, new File(pcmfilepath));
-            return audioInputStream;
+            AudioSystem.write(audioInputStream, AudioFileFormat.Type.WAVE, pcmfile);
+//            return audioInputStream;
         } catch (IOException e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
-            return null;
+//            return null;
         }
     }
 
@@ -64,9 +64,9 @@ public class AudioUtils {
      * @param rateFactor 音调变化率 (0,2) 大于1为降低音调（深沉），小于1为提升音调（尖锐）
      * @return 变声后的PCM数据输入流
      */
-    public static InputStream speechPitchShift(final InputStream rawPcmInputStream, double speedFactor, double rateFactor) {
+    public static void speechPitchShift(final InputStream rawPcmInputStream, double speedFactor, double rateFactor, File newfilepath) {
         // 这里根据自己PCM格式修改对应参数。我们项目里音频格式是固定的，所以写死
-        TarsosDSPAudioFormat format = new TarsosDSPAudioFormat(8000,16,1,true,false);
+        TarsosDSPAudioFormat format = new TarsosDSPAudioFormat(16000,16,1,true,false);
         AudioInputStream inputStream = new AudioInputStream(rawPcmInputStream, JVMAudioInputStream.toAudioFormat(format), AudioSystem.NOT_SPECIFIED);
         JVMAudioInputStream stream = new JVMAudioInputStream(inputStream);
 
@@ -83,21 +83,33 @@ public class AudioUtils {
         dispatcher.addAudioProcessor(out);
         dispatcher.run();
 
-        return new ByteArrayInputStream(out.getData());
+        inputStreamToFile(new ByteArrayInputStream(out.getData()), newfilepath);
+//        return new ByteArrayInputStream(out.getData());
     }
 
     public static void main(String[] args) throws Exception {
         AudioUtils utils  = AudioUtils.getInstance();
-        // utils.playMP3("D:/data/video/22条商规.mp3");
+//         utils.playMP3("D:/data/images/22条商规.mp3");
 
-        // 声音变音处理
-        // InputStream inputStream = utils.convertMP32Pcm("D:/data/images/22条商规.mp3", "D:/data/images/22条商规pcm.pcm");
-        // InputStream inputStream1 = speechPitchShift(inputStream, 0.6, 0.6);
+        /**
+         * 声音变音处理
+         * 1、MP3转换为pcm流
+         * 2、pcm流变音处理，生成pcm文件
+         * 3、pcm转为MP3
+         */
+
+//        utils.convertMP32Pcm("D:/data/images/22条商规.mp3", pcmfile);
+
+//        String mp3file = "D:/data/images/fjsp.mp3";
+//        AudioInputStream audioInputStream = utils.getPcmAudioInputStream(mp3file);
+//        inputStreamToFile(audioInputStream, new File("D:/data/images/22条商规2pcm.pcm"));
+//        File pcmfile = new File("D:/data/images/fjsp3pcm.pcm");
+//        speechPitchShift(audioInputStream, 1.55, 1.55, pcmfile);
+//        convertAudioFiles("D:/data/images/fjsp3pcm.pcm", "D:/data/images/fjsp3mp3.mp3", 48000);
+
         //TarsosDSP 变音
-        speechPitchShiftMp3("D:/data/images/22条商规.mp3", 1.55, 1.55, "D:/data/images/22条商规pcm.pcm");
-
-        convertAudioFiles("D:/data/images/22条商规2pcm.pcm", "D:/data/images/22条商规2mp32.mp3");
-        // convertAudioFiles("D:/data/video/xx22New.pcm", "D:/data/video/xx22New.mp3");
+//        speechPitchShiftMp3(mp3file, 1.55, 1.55, "D:/data/images/22条商规pcm.pcm");
+//         convertAudioFiles("D:/data/images/22条商规pcm.pcm", "D:/data/images/22条商规-new.mp3", 8000);
     }
 
     /**
@@ -167,7 +179,7 @@ public class AudioUtils {
         dispatcher.run();
         byte[] bytes = out.getData();
 
-        File tempFile = new File("D:/data/images/bxqypcm4.pcm");
+        File tempFile = new File(pcmfilepath);
         //如果需要转成wav则需要给pcmBytes增加一个头部信息  116.31.48 37.48.39
         //TarsosDSP中也有输出Wav格式音频的处理器，这里没有使用。
         byte[] wavHeader = pcm2wav(bytes);
@@ -200,13 +212,14 @@ public class AudioUtils {
         return h;
     }
 
+
     /**
      * PCM 转 MP3
      * @param src    待转换文件路径
      * @param target 目标文件路径
      * @throws IOException 抛出异常
      */
-    public static String convertAudioFiles(String src, String target) throws IOException {
+    public static String convertAudioFiles(String src, String target, int perSec) throws IOException {
         FileInputStream fis = new FileInputStream(src);
         FileOutputStream fos = new FileOutputStream(target);
 
@@ -228,7 +241,7 @@ public class AudioUtils {
         header.BitsPerSample = 16;
         header.Channels = 1;
         header.FormatTag = 0x0001;
-        header.SamplesPerSec = 8000;//正常速度是8000，这里写成了16000，速度加快一倍
+        header.SamplesPerSec = perSec;//正常速度是8000，这里写成了16000，速度加快一倍
         header.BlockAlign = (short) (header.Channels * header.BitsPerSample / 8);
         header.AvgBytesPerSec = header.BlockAlign * header.SamplesPerSec;
         header.DataHdrLeth = PCMSize;
@@ -362,7 +375,7 @@ public class AudioUtils {
                 os.write(buffer, 0, bytesRead);
             }
             os.close();
-            ins.close();
+//            ins.close();
         } catch (Exception e) {
             e.printStackTrace();
         }

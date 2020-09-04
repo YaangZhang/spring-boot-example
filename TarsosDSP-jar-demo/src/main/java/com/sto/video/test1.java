@@ -38,7 +38,7 @@ public class test1 {
      * @return
      * @throws Exception
      */
-    public InputStream convertMP32Pcm(String mp3filepath, String pcmfilepath){
+    public static InputStream convertMP32Pcm(String mp3filepath, String pcmfilepath){
         try {
             //获取文件的音频流，pcm的格式
             AudioInputStream audioInputStream = getPcmAudioInputStream(mp3filepath);
@@ -59,7 +59,7 @@ public class test1 {
      * @param mp3filepath
      * @return
      */
-    private AudioInputStream getPcmAudioInputStream(String mp3filepath) {
+    private static AudioInputStream getPcmAudioInputStream(String mp3filepath) {
         File mp3 = new File(mp3filepath);
         AudioInputStream audioInputStream = null;
         AudioFormat targetFormat = null;
@@ -113,22 +113,26 @@ public class test1 {
     }
 
     public static void main(String[] args) throws Exception{
+        // 声音变音处理
+         InputStream inputStream = convertMP32Pcm("D:/data/images/22条商规.mp3", "D:/data/images/22条商规pcm.pcm");
+         InputStream inputStream1 = speechPitchShift(inputStream, 1.55, 1.55);
+        convertAudioFiles("D:/data/images/22条商规pcm.pcm", "D:/data/images/22条商规mp32.mp3");
 
         //这里返回的是pcm格式的音频
-        byte[] bytes = speechPitchShiftMp3("D:/data/images/bxqy.mp3", 1.55, 1.55);
-        File tempFile = new File("D:/data/images/bxqypcm.pcm");
-        //如果需要转成wav则需要给pcmBytes增加一个头部信息  116.31.48 37.48.39
-        //TarsosDSP中也有输出Wav格式音频的处理器，这里没有使用。
-        byte[] wavHeader = pcm2wav(bytes);
-        OutputStream wavOutPut = new FileOutputStream(tempFile);
-        wavOutPut.write(wavHeader);
-        wavOutPut.write(bytes);
-        wavOutPut.flush();
-        wavOutPut.close();
-
-        // 对于各种声音类型，以及所需添加的处理器，还有处理器参数代码，将在本文最后给出。
-        //如果需要转mp3格式的，也可以给我留言，我会加上。
-        convertAudioFiles("D:/data/images/bxqypcm.pcm", "D:/data/images/bxqymp3.mp3");
+//        byte[] bytes = speechPitchShiftMp3("D:/data/images/bxqy.mp3", 1.55, 1.55);
+//        File tempFile = new File("D:/data/images/bxqypcm.pcm");
+//        //如果需要转成wav则需要给pcmBytes增加一个头部信息  116.31.48 37.48.39
+//        //TarsosDSP中也有输出Wav格式音频的处理器，这里没有使用。
+//        byte[] wavHeader = pcm2wav(bytes);
+//        OutputStream wavOutPut = new FileOutputStream(tempFile);
+//        wavOutPut.write(wavHeader);
+//        wavOutPut.write(bytes);
+//        wavOutPut.flush();
+//        wavOutPut.close();
+//
+//        // 对于各种声音类型，以及所需添加的处理器，还有处理器参数代码，将在本文最后给出。
+//        //如果需要转mp3格式的，也可以给我留言，我会加上。
+//        convertAudioFiles("D:/data/images/bxqypcm.pcm", "D:/data/images/bxqymp3.mp3");
     }
 
     /**
@@ -251,7 +255,7 @@ public class test1 {
         header.BitsPerSample = 16;
         header.Channels = 1;
         header.FormatTag = 0x0001;
-        header.SamplesPerSec = 16000;//正常速度是8000，这里写成了16000，速度加快一倍
+        header.SamplesPerSec = 8000;//正常速度是8000，这里写成了16000，速度加快一倍
         header.BlockAlign = (short) (header.Channels * header.BitsPerSample / 8);
         header.AvgBytesPerSec = header.BlockAlign * header.SamplesPerSec;
         header.DataHdrLeth = PCMSize;
