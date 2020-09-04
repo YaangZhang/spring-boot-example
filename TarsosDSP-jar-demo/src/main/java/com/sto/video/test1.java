@@ -11,14 +11,14 @@
 package com.sto.video;
 
 import be.tarsos.dsp.AudioDispatcher;
-import be.tarsos.dsp.GainProcessor;
 import be.tarsos.dsp.WaveformSimilarityBasedOverlapAdd;
-import be.tarsos.dsp.effects.DelayEffect;
-import be.tarsos.dsp.effects.FlangerEffect;
+import be.tarsos.dsp.io.TarsosDSPAudioFormat;
 import be.tarsos.dsp.io.jvm.AudioDispatcherFactory;
+import be.tarsos.dsp.io.jvm.JVMAudioInputStream;
 import be.tarsos.dsp.resample.RateTransposer;
+import javazoom.spi.mpeg.sampled.file.MpegAudioFileReader;
 
-import javax.sound.sampled.UnsupportedAudioFileException;
+import javax.sound.sampled.*;
 import java.io.*;
 
 /**
@@ -30,11 +30,93 @@ import java.io.*;
  * @since 1.0.0
  */
 public class test1 {
+    /**
+     * MP3转换PCM文件方法
+     *
+     * @param mp3filepath 原始文件路径
+     * @param pcmfilepath 转换文件的保存路径
+     * @return
+     * @throws Exception
+     */
+    public InputStream convertMP32Pcm(String mp3filepath, String pcmfilepath){
+        try {
+            //获取文件的音频流，pcm的格式
+            AudioInputStream audioInputStream = getPcmAudioInputStream(mp3filepath);
+            //将音频转化为  pcm的格式保存下来
+            AudioSystem.write(audioInputStream, AudioFileFormat.Type.WAVE, new File(pcmfilepath));
+            return audioInputStream;
+        } catch (IOException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+            return null;
+        }
+    }
+    /**
+     * 机能概要:获取文件的音频流
+     * 创建日期:2018年1月14日<br/>
+     * 创建时间:下午9:53:14<br/>
+     * 创建用户:yellowcong<br/>
+     * @param mp3filepath
+     * @return
+     */
+    private AudioInputStream getPcmAudioInputStream(String mp3filepath) {
+        File mp3 = new File(mp3filepath);
+        AudioInputStream audioInputStream = null;
+        AudioFormat targetFormat = null;
+        try {
+            AudioInputStream in = null;
+
+            //读取音频文件的类
+            MpegAudioFileReader mp = new MpegAudioFileReader();
+            in = mp.getAudioInputStream(mp3);
+            AudioFormat baseFormat = in.getFormat();
+
+            //设定输出格式为pcm格式的音频文件
+            targetFormat = new AudioFormat(AudioFormat.Encoding.PCM_SIGNED, baseFormat.getSampleRate(), 16,
+                    baseFormat.getChannels(), baseFormat.getChannels() * 2, baseFormat.getSampleRate(), false);
+
+            //输出到音频
+            audioInputStream = AudioSystem.getAudioInputStream(targetFormat, in);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return audioInputStream;
+    }
+
+    /**
+     * 变声
+     * @param rawPcmInputStream 原始PCM数据输入流
+     * @param speedFactor 变速率 (0,2) 大于1为加快语速，小于1为放慢语速
+     * @param rateFactor 音调变化率 (0,2) 大于1为降低音调（深沉），小于1为提升音调（尖锐）
+     * @return 变声后的PCM数据输入流
+     */
+    public static InputStream speechPitchShift(final InputStream rawPcmInputStream, double speedFactor, double rateFactor) {
+        // 这里根据自己PCM格式修改对应参数。我们项目里音频格式是固定的，所以写死
+        TarsosDSPAudioFormat format = new TarsosDSPAudioFormat(8000,16,1,true,false);
+        AudioInputStream inputStream = new AudioInputStream(rawPcmInputStream, JVMAudioInputStream.toAudioFormat(format), AudioSystem.NOT_SPECIFIED);
+        JVMAudioInputStream stream = new JVMAudioInputStream(inputStream);
+
+        WaveformSimilarityBasedOverlapAdd w = new WaveformSimilarityBasedOverlapAdd(WaveformSimilarityBasedOverlapAdd.Parameters.speechDefaults(speedFactor, 16000));
+        int inputBufferSize = w.getInputBufferSize();
+        int overlap = w.getOverlap();
+        AudioDispatcher dispatcher = new AudioDispatcher(stream, inputBufferSize ,overlap);
+        w.setDispatcher(dispatcher);
+
+        AudioOutputToByteArray out = new AudioOutputToByteArray();
+
+        dispatcher.addAudioProcessor(w);
+        dispatcher.addAudioProcessor(new RateTransposer(rateFactor));
+        dispatcher.addAudioProcessor(out);
+        dispatcher.run();
+
+        return new ByteArrayInputStream(out.getData());
+    }
+
     public static void main(String[] args) throws Exception{
 
         //这里返回的是pcm格式的音频
         byte[] bytes = speechPitchShiftMp3("D:/data/images/bxqy.mp3", 1.55, 1.55);
-        File tempFile = new File("D:/data/images/bxqypcm4.pcm");
+        File tempFile = new File("D:/data/images/bxqypcm.pcm");
         //如果需要转成wav则需要给pcmBytes增加一个头部信息  116.31.48 37.48.39
         //TarsosDSP中也有输出Wav格式音频的处理器，这里没有使用。
         byte[] wavHeader = pcm2wav(bytes);
@@ -46,7 +128,7 @@ public class test1 {
 
         // 对于各种声音类型，以及所需添加的处理器，还有处理器参数代码，将在本文最后给出。
         //如果需要转mp3格式的，也可以给我留言，我会加上。
-        convertAudioFiles("D:/data/images/bxqypcm4.pcm", "D:/data/images/bxqymp34.mp3");
+        convertAudioFiles("D:/data/images/bxqypcm.pcm", "D:/data/images/bxqymp3.mp3");
     }
 
     /**
