@@ -865,23 +865,28 @@ public class MediaUtil {
         // boolean executable = isExecutable();
         // System.out.println(executable);
 
-
         // vodieToPcm("D:/data/images/22条商规.mp3", "D:/data/images/22条商规2pcm.pcm", FFMPEG_PATH);
 
-        File videoFile = new File("D:/data/images/bxqy.mp4");
-        File audioFile = new File("D:/data/images/VID_20190915.mp3");
-        File videoFile2 = new File("D:/data/images/VID_20190915-3.mp4");
-        File imageFile = new File("D:/data/images/test-gif.gif");
+        String videoPath = "D:/data/images/05d6.mp4";
+        String mp3Path = "D:/data/images/05d6.mp3";
+        String mp4VideoPath = "D:/data/video/sir-0237mp4.mp4";
+        String newVideoPath = "D:/data/video/sir-0237-07.mp4";
+        File videoFile = new File(videoPath);
+        File audioFile = new File(mp3Path);
+        File videoFile2 = new File(mp4VideoPath);
 
-        cutVideoFrame(videoFile, imageFile, new Time(0, 3, 0));
+        // cutVideoFrame(videoFile, imageFile, new Time(0, 3, 0));
 
         // VideoMetaInfo videoMetaInfo = getVideoMetaInfo(videoFile);
         // System.out.println("视频信息："+videoMetaInfo);
         // cutVideo(videoFile, videoFile2, DEFAULT_TIME, 30);
 
-        // getAudioFromVideo(videoFile, audioFile, 1);
-        // getAudioFromVideo(videoFile, videoFile2, 0);
-        // avMerge("D:/data/images/VID_20190915-3.mp4", "D:/data/images/VID_20190915.mp3", "D:/data/images/VID_20190915-new.mp4");
+        getAudioFromVideo(videoFile, audioFile, 1);
+        getAudioFromVideo(videoFile, videoFile2, 0);
+        AudioUtils.speechPitchShiftMp3(mp3Path, 1.5, 1.5, "D:/data/video/mp3pcm.pcm");
+        AudioUtils.convertAudioFiles("D:/data/video/mp3pcm.pcm", mp3Path, 8000);
+
+        avMerge(mp4VideoPath, mp3Path, newVideoPath);
     }
 
 
