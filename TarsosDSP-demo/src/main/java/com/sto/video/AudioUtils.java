@@ -100,7 +100,7 @@ public class AudioUtils {
 
 //        utils.convertMP32Pcm("D:/data/images/22条商规.mp3", pcmfile);
 
-//        String mp3file = "D:/data/images/fjsp.mp3";
+       String mp3file = "D:/data/images/VID_20190915.mp3";
 //        AudioInputStream audioInputStream = utils.getPcmAudioInputStream(mp3file);
 //        inputStreamToFile(audioInputStream, new File("D:/data/images/22条商规2pcm.pcm"));
 //        File pcmfile = new File("D:/data/images/fjsp3pcm.pcm");
@@ -108,8 +108,8 @@ public class AudioUtils {
 //        convertAudioFiles("D:/data/images/fjsp3pcm.pcm", "D:/data/images/fjsp3mp3.mp3", 48000);
 
         //TarsosDSP 变音
-//        speechPitchShiftMp3(mp3file, 1.55, 1.55, "D:/data/images/22条商规pcm.pcm");
-//         convertAudioFiles("D:/data/images/22条商规pcm.pcm", "D:/data/images/22条商规-new.mp3", 8000);
+       speechPitchShiftMp3(mp3file, 1.55, 1.55, "D:/data/images/VID_20190915pcm.pcm");
+        convertAudioFiles("D:/data/images/VID_20190915pcm.pcm", "D:/data/images/VID_20190915-new.mp3", 8000);
     }
 
     /**
