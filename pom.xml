@@ -30,6 +30,7 @@
         <module>jdk-thread</module>
         <module>spring-aop</module>
         <module>spring-shejimoshi</module>
+        <module>spring-boot-quartz</module>
     </modules>
 
     <dependencyManagement>

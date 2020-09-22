@@ -1,20 +1,22 @@
 package com.sto.video;
 
-// import media.domain.ImageMetaInfo;
-// import media.domain.MusicMetaInfo;
-// import media.domain.VideoMetaInfo;
-// import media.domain.gif.AnimatedGifEncoder;
+import com.sto.video.domain.MusicMetaInfo;
+import com.sto.video.domain.VideoMetaInfo;
+import com.sto.video.domain.gif.AnimatedGifEncoder;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.imageio.ImageIO;
+import java.awt.image.BufferedImage;
 import java.io.*;
 import java.sql.Time;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
@@ -64,10 +66,9 @@ public class MediaUtil {
      * FFmpeg程序执行路径
      * 当前系统安装好ffmpeg程序并配置好相应的环境变量后，值为ffmpeg可执行程序文件在实际系统中的绝对路径
      */
-//	private static String FFMPEG_PATH = "D://tools/ffmpeg-20200826-8f2c1f2-win64-static/bin/ffmpeg.exe"; // /usr/bin/ffmpeg
-    private static String FFMPEG_PATH = "D://soft/ffmpeg-4.3-win64-static/bin/ffmpeg.exe"; // /usr/bin/ffmpeg
+	private static String FFMPEG_PATH = "D://tools/ffmpeg-20200826-8f2c1f2-win64-static/bin/ffmpeg.exe"; // /usr/bin/ffmpeg
+    // private static String FFMPEG_PATH = "D://soft/ffmpeg-4.3-win64-static/bin/ffmpeg.exe"; // /usr/bin/ffmpeg
 	// private static String FFMPEG_PATH = "ffmpeg"; // /usr/bin/ffmpeg
-
 
     /**
      * 视频时长正则匹配式
@@ -140,7 +141,7 @@ public class MediaUtil {
         }
         List<String> cmds = new ArrayList<>(1);
         cmds.add("-version");
-        String ffmpegVersionStr = executeCommand(cmds);
+        String ffmpegVersionStr = executeCommandInfo(cmds);
         if (StringUtils.isBlank(ffmpegVersionStr)) {
             log.error("--- 工作状态异常，因为ffmpeg命令执行失败！ ---");
             return false;
@@ -155,7 +156,7 @@ public class MediaUtil {
      * @param commonds 要执行的FFmpeg命令
      * @return FFmpeg程序在执行命令过程中产生的各信息，执行出错时返回null
      */
-	public static String executeCommand(List<String> commonds) {
+	public static String executeCommandInfo(List<String> commonds) {
 		if (CollectionUtils.isEmpty(commonds)) {
 		    log.error("--- 指令执行失败，因为要执行的FFmpeg指令为空！ ---");
 		    return null;
@@ -168,8 +169,8 @@ public class MediaUtil {
 		Process ffmpeg = null;
 		try {
 		    // 执行ffmpeg指令
-			ProcessBuilder builder = new ProcessBuilder();
-			builder.command(ffmpegCmds);
+			ProcessBuilder builder = new ProcessBuilder(ffmpegCmds);
+			// builder.command(ffmpegCmds);
 			ffmpeg = builder.start();
 			log.info("--- 开始执行FFmpeg指令：--- 执行线程名：" + builder.toString());
 
@@ -181,20 +182,16 @@ public class MediaUtil {
             inputStream.start();
             // 等待ffmpeg命令执行完
             ffmpeg.waitFor();
-
             // 获取执行结果字符串
             String result = errorStream.stringBuffer.append(inputStream.stringBuffer).toString();
-
 			// 输出执行的命令信息
             String cmdStr = Arrays.toString(ffmpegCmds.toArray()).replace(",", "");
             String resultStr = StringUtils.isBlank(result) ? "【异常】" : "正常";
 			log.info("--- 已执行的FFmepg命令： ---" + cmdStr + " 已执行完毕,执行结果： " + resultStr);
             return result;
-
 		} catch (Exception e) {
 			log.error("--- FFmpeg命令执行出错！ --- 出错信息： " + e.getMessage());
 			return null;
-
 		} finally {
 		    if (null != ffmpeg) {
                 ProcessKiller ffmpegKiller = new ProcessKiller(ffmpeg);
@@ -263,7 +260,6 @@ public class MediaUtil {
         executeCommand(commond);
     }
 
-
 	/**
 	 * 视频帧抽取
      * 默认抽取第10秒的帧画面
@@ -274,9 +270,9 @@ public class MediaUtil {
 	 * @param videoFile 源视频路径
 	 * @param fileOutPut 转换后的文件路径
 	 */
-	// public static void cutVideoFrame(File videoFile, File fileOutPut) {
-	// 	cutVideoFrame(videoFile, fileOutPut, DEFAULT_TIME);
-	// }
+	public static void cutVideoFrame(File videoFile, File fileOutPut) {
+		cutVideoFrame(videoFile, fileOutPut, DEFAULT_TIME);
+	}
 
 	/**
 	 * 视频帧抽取（抽取指定时间点的帧画面）
@@ -288,9 +284,9 @@ public class MediaUtil {
 	 * @param fileOutPut 转换后的文件路径
 	 * @param time 指定抽取视频帧的时间点（单位：s）
 	 */
-	// public static void cutVideoFrame(File videoFile, File fileOutPut, Time time) {
-	// 	cutVideoFrame(videoFile, fileOutPut, time, DEFAULT_WIDTH);
-	// }
+	public static void cutVideoFrame(File videoFile, File fileOutPut, Time time) {
+		cutVideoFrame(videoFile, fileOutPut, time, DEFAULT_WIDTH);
+	}
 
 	/**
 	 * 视频帧抽取（抽取指定时间点、指定宽度值的帧画面）
@@ -303,21 +299,21 @@ public class MediaUtil {
 	 * @param time 指定要抽取第几秒的视频帧（单位：s）
 	 * @param width 抽取的视频帧图片的宽度（单位：px）
 	 */
-	// public static void cutVideoFrame(File videoFile, File fileOutPut, Time time, int width) {
-	//     if (null == videoFile || !videoFile.exists()) {
-	//         throw new RuntimeException("源视频文件不存在，请检查源视频路径");
-    //     }
-    //     if (null == fileOutPut) {
-    //         throw new RuntimeException("转换后的视频路径为空，请检查转换后的视频存放路径是否正确");
-    //     }
-	// 	VideoMetaInfo info = getVideoMetaInfo(videoFile);
-	// 	if (null == info) {
-	// 		log.error("--- 未能解析源视频信息，视频帧抽取操作失败 --- 源视频： " + videoFile);
-	// 		return;
-	// 	}
-	// 	int height = width * info.getHeight() / info.getWidth(); // 根据宽度计算适合的高度，防止画面变形
-	// 	cutVideoFrame(videoFile, fileOutPut, time, width, height);
-	// }
+	public static void cutVideoFrame(File videoFile, File fileOutPut, Time time, int width) {
+	    if (null == videoFile || !videoFile.exists()) {
+	        throw new RuntimeException("源视频文件不存在，请检查源视频路径");
+        }
+        if (null == fileOutPut) {
+            throw new RuntimeException("转换后的视频路径为空，请检查转换后的视频存放路径是否正确");
+        }
+		VideoMetaInfo info = getVideoMetaInfo(videoFile);
+		if (null == info) {
+			log.error("--- 未能解析源视频信息，视频帧抽取操作失败 --- 源视频： " + videoFile);
+			return;
+		}
+		int height = width * info.getHeight() / info.getWidth(); // 根据宽度计算适合的高度，防止画面变形
+		cutVideoFrame(videoFile, fileOutPut, time, width, height);
+	}
 
 	/**
 	 * 视频帧抽取（抽取指定时间点、指定宽度值、指定高度值的帧画面）
@@ -330,52 +326,52 @@ public class MediaUtil {
 	 * @param width 抽取的视频帧图片的宽度（单位：px）
 	 * @param height 抽取的视频帧图片的高度（单位：px）
 	 */
-	// public static void cutVideoFrame(File videoFile, File fileOutPut, Time time, int width, int height) {
-    //     if (null == videoFile || !videoFile.exists()) {
-    //         throw new RuntimeException("源视频文件不存在，请检查源视频路径");
-    //     }
-    //     if (null == fileOutPut) {
-    //         throw new RuntimeException("转换后的视频路径为空，请检查转换后的视频存放路径是否正确");
-    //     }
-	// 	String format = getFormat(fileOutPut);
-	// 	if (!isLegalFormat(format, IMAGE_TYPE)) {
-	// 		throw new RuntimeException("无法生成指定格式的帧图片：" + format);
-	// 	}
-	// 	String fileOutPutPath = fileOutPut.getAbsolutePath();
-	// 	if (!"GIF".equals(StringUtils.upperCase(format))) {
-	// 	    // 输出路径不是以.gif结尾，抽取并生成一张静态图
-	// 		cutVideoFrame(videoFile, fileOutPutPath, time, width, height, 1, false);
-	// 	} else {
-	// 	    // 抽取并生成一个gif（gif由10张静态图构成）
-	// 		String path = fileOutPut.getParent();
-	// 		String name = fileOutPut.getName();
-	// 		// 创建临时文件存储多张静态图用于生成gif
-	// 		String tempPath = path + File.separator + System.currentTimeMillis() + "_" + name.substring(0, name.indexOf("."));
-	// 		File file = new File(tempPath);
-	// 		if (!file.exists()) {
-	// 			file.mkdir();
-	// 		}
-	// 		try {
-	// 			cutVideoFrame(videoFile, tempPath, time, width, height, DEFAULT_TIME_LENGTH, true);
-	// 			// 生成gif
-	// 			String images[] = file.list();
-	// 			for (int i = 0; i < images.length; i++) {
-	// 				images[i] = tempPath + File.separator + images[i];
-	// 			}
-	// 			createGifImage(images, fileOutPut.getAbsolutePath(), DEFAULT_GIF_PLAYTIME);
-	// 		} catch (Exception e) {
-	// 			log.error("--- 截取视频帧操作出错 --- 错误信息：" + e.getMessage());
-	// 		} finally {
-	// 		    // 删除用于生成gif的临时文件
-	// 			String images[] = file.list();
-	// 			for (int i = 0; i < images.length; i++) {
-	// 				File fileDelete = new File(tempPath + File.separator + images[i]);
-	// 				fileDelete.delete();
-	// 			}
-	// 			file.delete();
-	// 		}
-	// 	}
-	// }
+	public static void cutVideoFrame(File videoFile, File fileOutPut, Time time, int width, int height) {
+        if (null == videoFile || !videoFile.exists()) {
+            throw new RuntimeException("源视频文件不存在，请检查源视频路径");
+        }
+        if (null == fileOutPut) {
+            throw new RuntimeException("转换后的视频路径为空，请检查转换后的视频存放路径是否正确");
+        }
+		String format = getFormat(fileOutPut);
+		if (!isLegalFormat(format, IMAGE_TYPE)) {
+			throw new RuntimeException("无法生成指定格式的帧图片：" + format);
+		}
+		String fileOutPutPath = fileOutPut.getAbsolutePath();
+		if (!"GIF".equals(StringUtils.upperCase(format))) {
+		    // 输出路径不是以.gif结尾，抽取并生成一张静态图
+			cutVideoFrame(videoFile, fileOutPutPath, time, width, height, 1, false);
+		} else {
+		    // 抽取并生成一个gif（gif由10张静态图构成）
+			String path = fileOutPut.getParent();
+			String name = fileOutPut.getName();
+			// 创建临时文件存储多张静态图用于生成gif
+			String tempPath = path + File.separator + System.currentTimeMillis() + "_" + name.substring(0, name.indexOf("."));
+			File file = new File(tempPath);
+			if (!file.exists()) {
+				file.mkdir();
+			}
+			try {
+				cutVideoFrame(videoFile, tempPath, time, width, height, DEFAULT_TIME_LENGTH, true);
+				// 生成gif
+				String images[] = file.list();
+				for (int i = 0; i < images.length; i++) {
+					images[i] = tempPath + File.separator + images[i];
+				}
+				createGifImage(images, fileOutPut.getAbsolutePath(), DEFAULT_GIF_PLAYTIME);
+			} catch (Exception e) {
+				log.error("--- 截取视频帧操作出错 --- 错误信息：" + e.getMessage());
+			} finally {
+			    // 删除用于生成gif的临时文件
+				String images[] = file.list();
+				for (int i = 0; i < images.length; i++) {
+					File fileDelete = new File(tempPath + File.separator + images[i]);
+					fileDelete.delete();
+				}
+				file.delete();
+			}
+		}
+	}
 
     /**
      * 视频帧抽取（抽取指定时间点、指定宽度值、指定高度值、指定时长、指定单张/多张的帧画面）
@@ -388,56 +384,57 @@ public class MediaUtil {
      * @param timeLength 截取的视频帧的时长（从time开始算，单位:s，需小于源视频的最大时长）
      * @param isContinuty false - 静态图（只截取time时间点的那一帧图片），true - 动态图（截取从time时间点开始,timelength这段时间内的多张帧图）
      */
-    // private static void cutVideoFrame(File videoFile, String path, Time time, int width, int height, int timeLength, boolean isContinuty) {
-    //     if (videoFile == null || !videoFile.exists()) {
-    //         throw new RuntimeException("源视频文件不存在，源视频路径： ");
-    //     }
-    //     if (null == path) {
-    //         throw new RuntimeException("转换后的文件路径为空，请检查转换后的文件存放路径是否正确");
-    //     }
-    //     VideoMetaInfo info = getVideoMetaInfo(videoFile);
-    //     if (null == info) {
-    //         throw new RuntimeException("未解析到视频信息");
-    //     }
-    //     if (time.getTime() + timeLength > info.getDuration()) {
-    //         throw new RuntimeException("开始截取视频帧的时间点不合法：" + time.toString() + "，因为截取时间点晚于视频的最后时间点");
-    //     }
-    //     if (width <= 20 || height <= 20) {
-    //         throw new RuntimeException("截取的视频帧图片的宽度或高度不合法，宽高值必须大于20");
-    //     }
-    //     try {
-    //         List<String> commond = new ArrayList<String>();
-    //         commond.add("-ss");
-    //         commond.add(time.toString());
-    //         if (isContinuty) {
-    //             commond.add("-t");
-    //             commond.add(timeLength + "");
-    //         } else {
-    //             commond.add("-vframes");
-    //             commond.add("1");
-    //         }
-    //         commond.add("-i");
-    //         commond.add(videoFile.getAbsolutePath());
-    //         commond.add("-an");
-    //         commond.add("-f");
-    //         commond.add("image2");
-    //         if (isContinuty) {
-    //             commond.add("-r");
-    //             commond.add("3");
-    //         }
-    //         commond.add("-s");
-    //         commond.add(width + "*" + height);
-    //         if (isContinuty) {
-    //             commond.add(path + File.separator + "foo-%03d.jpeg");
-    //         } else {
-    //             commond.add(path);
-    //         }
-    //
-    //         executeCommand(commond);
-    //     } catch (Exception e) {
-    //         log.error("--- 视频帧抽取过程出错 --- 错误信息： " + e.getMessage());
-    //     }
-    // }
+    private static void cutVideoFrame(File videoFile, String path, Time time, int width, int height, int timeLength, boolean isContinuty) {
+        if (videoFile == null || !videoFile.exists()) {
+            throw new RuntimeException("源视频文件不存在，源视频路径： ");
+        }
+        if (null == path) {
+            throw new RuntimeException("转换后的文件路径为空，请检查转换后的文件存放路径是否正确");
+        }
+        VideoMetaInfo info = getVideoMetaInfo(videoFile);
+        if (null == info) {
+            throw new RuntimeException("未解析到视频信息");
+        }
+        if (time.getTime() + timeLength > info.getDuration()) {
+            throw new RuntimeException("开始截取视频帧的时间点不合法：" + time.toString() + "，因为截取时间点晚于视频的最后时间点");
+        }
+        if (width <= 20 || height <= 20) {
+            throw new RuntimeException("截取的视频帧图片的宽度或高度不合法，宽高值必须大于20");
+        }
+        try {
+            List<String> commond = new ArrayList<String>();
+            commond.add("-i");
+            commond.add(videoFile.getAbsolutePath());
+            commond.add("-ss");
+            commond.add(time.toString());
+            if (isContinuty) {
+                commond.add("-t");
+                commond.add(timeLength + "");
+            } else {
+                commond.add("-frames:v");
+                commond.add("1");
+            }
+
+            commond.add("-an");
+            commond.add("-f");
+            commond.add("image2");
+            if (isContinuty) {
+                commond.add("-r");
+                commond.add("3");
+            }
+            commond.add("-s");
+            commond.add(width + "*" + height);
+            if (isContinuty) {
+                commond.add(path + File.separator + "foo-%03d.jpeg");
+            } else {
+                commond.add(path);
+            }
+            commond.add("-y");
+            executeCommand(commond);
+        } catch (Exception e) {
+            log.error("--- 视频帧抽取过程出错 --- 错误信息： " + e.getMessage());
+        }
+    }
 
     /**
      * 截取视频中的某一段，生成新视频
@@ -447,41 +444,43 @@ public class MediaUtil {
      * @param startTime 开始抽取的时间点（单位:s）
      * @param timeLength 需要抽取的时间段（单位:s，需小于源视频最大时长）；例如：该参数值为10时即抽取从startTime开始之后10秒内的视频作为新视频
      */
-    // public static void cutVideo(File videoFile, File outputFile, Time startTime, int timeLength) {
-    //     if (videoFile == null || !videoFile.exists()) {
-    //         throw new RuntimeException("视频文件不存在：");
-    //     }
-    //     if (null == outputFile) {
-    //         throw new RuntimeException("转换后的视频路径为空，请检查转换后的视频存放路径是否正确");
-    //     }
-    //     VideoMetaInfo info = getVideoMetaInfo(videoFile);
-    //     if (null == info) {
-    //         throw new RuntimeException("未解析到视频信息");
-    //     }
-    //     if (startTime.getTime() + timeLength > info.getDuration()) {
-    //         throw new RuntimeException("截取时间不合法：" + startTime.toString() + "，因为截取时间大于视频的时长");
-    //     }
-    //     try {
-    //         if (!outputFile.exists()) {
-    //             outputFile.createNewFile();
-    //         }
-    //         List<String> commond = new ArrayList<String>();
-    //         commond.add("-ss");
-    //         commond.add(startTime.toString());
-    //         commond.add("-t");
-    //         commond.add("" + timeLength);
-    //         commond.add("-i");
-    //         commond.add(videoFile.getAbsolutePath());
-    //         commond.add("-vcodec");
-    //         commond.add("copy");
-    //         commond.add("-acodec");
-    //         commond.add("copy");
-    //         commond.add(outputFile.getAbsolutePath());
-    //         executeCommand(commond);
-    //     } catch (IOException e) {
-    //         log.error("--- 视频截取过程出错 ---");
-    //     }
-    // }
+    public static void cutVideo(File videoFile, File outputFile, Time startTime, int timeLength) {
+        if (videoFile == null || !videoFile.exists()) {
+            throw new RuntimeException("视频文件不存在：");
+        }
+        if (null == outputFile) {
+            throw new RuntimeException("转换后的视频路径为空，请检查转换后的视频存放路径是否正确");
+        }
+        VideoMetaInfo info = getVideoMetaInfo(videoFile);
+        if (null == info) {
+            throw new RuntimeException("未解析到视频信息");
+        }
+        if (startTime.getTime() + timeLength > info.getDuration()) {
+            throw new RuntimeException("截取时间不合法：" + startTime.toString() + "，因为截取时间大于视频的时长");
+        }
+        try {
+            if (!outputFile.exists()) {
+                outputFile.createNewFile();
+            }
+            List<String> commond = new ArrayList<String>();
+            // commond.add("-loglevel quiet ");
+            commond.add("-i");
+            commond.add(videoFile.getAbsolutePath());
+            commond.add("-ss");
+            commond.add(startTime.toString());
+            commond.add("-t");
+            commond.add("" + timeLength);
+            commond.add("-vcodec");
+            commond.add("copy");
+            commond.add("-acodec");
+            commond.add("copy");
+            commond.add("-y");
+            commond.add(outputFile.getAbsolutePath());
+            executeCommandInfo(commond);
+        } catch (IOException e) {
+            log.error("--- 视频截取过程出错 ---");
+        }
+    }
 
     /**
      * 抽取视频里的音频信息
@@ -516,7 +515,7 @@ public class MediaUtil {
                 commond.add("-an"); // no video，去除视频信息
             }
 			// commond.add("-vn"); // no video，去除视频信息
-			// commond.add("-y");
+			commond.add("-y");
 			// commond.add("-acodec");
 			// commond.add("copy");
 			commond.add(audioFile.getAbsolutePath());
@@ -543,88 +542,86 @@ public class MediaUtil {
      * @param videoFile 源视频路径
      * @return 视频的基本信息，解码失败时返回null
      */
-    // public static VideoMetaInfo getVideoMetaInfo(File videoFile) {
-    //     if (null == videoFile || !videoFile.exists()) {
-    //         log.error("--- 解析视频信息失败，因为要解析的源视频文件不存在 ---");
-    //         return null;
-    //     }
-    //
-    //     VideoMetaInfo videoInfo = new VideoMetaInfo();
-    //
-    //     String parseResult = getMetaInfoFromFFmpeg(videoFile);
-    //
-    //     Matcher durationMacher = durationPattern.matcher(parseResult);
-    //     Matcher videoStreamMacher = videoStreamPattern.matcher(parseResult);
-    //     Matcher videoMusicStreamMacher = musicStreamPattern.matcher(parseResult);
-    //
-    //     Long duration = 0L; // 视频时长
-    //     Integer videoBitrate = 0; // 视频码率
-    //     String videoFormat = getFormat(videoFile); // 视频格式
-    //     Long videoSize = videoFile.length(); // 视频大小
-    //
-    //     String videoEncoder = ""; // 视频编码器
-    //     Integer videoHeight = 0; // 视频高度
-    //     Integer videoWidth = 0; // 视频宽度
-    //     Float videoFramerate = 0F; // 视频帧率
-    //
-    //     String musicFormat = ""; // 音频格式
-    //     Long samplerate = 0L; // 音频采样率
-    //     Integer musicBitrate = 0; // 音频码率
-    //
-    //     try {
-    //         // 匹配视频播放时长等信息
-    //         if (durationMacher.find()) {
-    //             long hours = (long)Integer.parseInt(durationMacher.group(1));
-    //             long minutes = (long)Integer.parseInt(durationMacher.group(2));
-    //             long seconds = (long)Integer.parseInt(durationMacher.group(3));
-    //             long dec = (long)Integer.parseInt(durationMacher.group(4));
-    //             duration = dec * 100L + seconds * 1000L + minutes * 60L * 1000L + hours * 60L * 60L * 1000L;
-    //             //String startTime = durationMacher.group(5) + "ms";
-    //             videoBitrate = Integer.parseInt(durationMacher.group(6));
-    //         }
-    //         // 匹配视频分辨率等信息
-    //         if (videoStreamMacher.find()) {
-    //             videoEncoder = videoStreamMacher.group(1);
-    //             String s2 = videoStreamMacher.group(2);
-    //             videoWidth = Integer.parseInt(videoStreamMacher.group(3));
-    //             videoHeight = Integer.parseInt(videoStreamMacher.group(4));
-    //             String s5 = videoStreamMacher.group(5);
-    //             videoFramerate = Float.parseFloat(videoStreamMacher.group(6));
-    //         }
-    //         // 匹配视频中的音频信息
-    //         if (videoMusicStreamMacher.find()) {
-    //             musicFormat = videoMusicStreamMacher.group(1); // 提取音频格式
-    //             //String s2 = videoMusicStreamMacher.group(2);
-    //             samplerate = Long.parseLong(videoMusicStreamMacher.group(3)); // 提取采样率
-    //             //String s4 = videoMusicStreamMacher.group(4);
-    //             //String s5 = videoMusicStreamMacher.group(5);
-    //             musicBitrate = Integer.parseInt(videoMusicStreamMacher.group(6)); // 提取比特率
-    //         }
-    //     } catch (Exception e) {
-    //         log.error("--- 解析视频参数信息出错！ --- 错误信息： " + e.getMessage());
-    //         return null;
-    //     }
-    //
-    //     // 封装视频中的音频信息
-    //     MusicMetaInfo musicMetaInfo = new MusicMetaInfo();
-    //     musicMetaInfo.setFormat(musicFormat);
-    //     musicMetaInfo.setDuration(duration);
-    //     musicMetaInfo.setBitRate(musicBitrate);
-    //     musicMetaInfo.setSampleRate(samplerate);
-    //     // 封装视频信息
-    //     VideoMetaInfo videoMetaInfo = new VideoMetaInfo();
-    //     videoMetaInfo.setFormat(videoFormat);
-    //     videoMetaInfo.setSize(videoSize);
-    //     videoMetaInfo.setBitRate(videoBitrate);
-    //     videoMetaInfo.setDuration(duration);
-    //     videoMetaInfo.setEncoder(videoEncoder);
-    //     videoMetaInfo.setFrameRate(videoFramerate);
-    //     videoMetaInfo.setHeight(videoHeight);
-    //     videoMetaInfo.setWidth(videoWidth);
-    //     videoMetaInfo.setMusicMetaInfo(musicMetaInfo);
-    //
-    //     return videoMetaInfo;
-    // }
+    public static VideoMetaInfo getVideoMetaInfo(File videoFile) {
+        if (null == videoFile || !videoFile.exists()) {
+            log.error("--- 解析视频信息失败，因为要解析的源视频文件不存在 ---");
+            return null;
+        }
+
+        String parseResult = getMetaInfoFromFFmpeg(videoFile);
+
+        Matcher durationMacher = durationPattern.matcher(parseResult);
+        Matcher videoStreamMacher = videoStreamPattern.matcher(parseResult);
+        Matcher videoMusicStreamMacher = musicStreamPattern.matcher(parseResult);
+
+        Long duration = 0L; // 视频时长
+        Integer videoBitrate = 0; // 视频码率
+        String videoFormat = getFormat(videoFile); // 视频格式
+        Long videoSize = videoFile.length(); // 视频大小
+
+        String videoEncoder = ""; // 视频编码器
+        Integer videoHeight = 0; // 视频高度
+        Integer videoWidth = 0; // 视频宽度
+        Float videoFramerate = 0F; // 视频帧率
+
+        String musicFormat = ""; // 音频格式
+        Long samplerate = 0L; // 音频采样率
+        Integer musicBitrate = 0; // 音频码率
+
+        try {
+            // 匹配视频播放时长等信息
+            if (durationMacher.find()) {
+                long hours = (long)Integer.parseInt(durationMacher.group(1));
+                long minutes = (long)Integer.parseInt(durationMacher.group(2));
+                long seconds = (long)Integer.parseInt(durationMacher.group(3));
+                long dec = (long)Integer.parseInt(durationMacher.group(4));
+                duration = dec * 100L + seconds * 1000L + minutes * 60L * 1000L + hours * 60L * 60L * 1000L;
+                //String startTime = durationMacher.group(5) + "ms";
+                videoBitrate = Integer.parseInt(durationMacher.group(6));
+            }
+            // 匹配视频分辨率等信息
+            if (videoStreamMacher.find()) {
+                videoEncoder = videoStreamMacher.group(1);
+                String s2 = videoStreamMacher.group(2);
+                videoWidth = Integer.parseInt(videoStreamMacher.group(3));
+                videoHeight = Integer.parseInt(videoStreamMacher.group(4));
+                String s5 = videoStreamMacher.group(5);
+                videoFramerate = Float.parseFloat(videoStreamMacher.group(6));
+            }
+            // 匹配视频中的音频信息
+            if (videoMusicStreamMacher.find()) {
+                musicFormat = videoMusicStreamMacher.group(1); // 提取音频格式
+                //String s2 = videoMusicStreamMacher.group(2);
+                samplerate = Long.parseLong(videoMusicStreamMacher.group(3)); // 提取采样率
+                //String s4 = videoMusicStreamMacher.group(4);
+                //String s5 = videoMusicStreamMacher.group(5);
+                musicBitrate = Integer.parseInt(videoMusicStreamMacher.group(6)); // 提取比特率
+            }
+        } catch (Exception e) {
+            log.error("--- 解析视频参数信息出错！ --- 错误信息： " + e.getMessage());
+            return null;
+        }
+
+        // 封装视频中的音频信息
+        MusicMetaInfo musicMetaInfo = new MusicMetaInfo();
+        musicMetaInfo.setFormat(musicFormat);
+        musicMetaInfo.setDuration(duration);
+        musicMetaInfo.setBitRate(musicBitrate);
+        musicMetaInfo.setSampleRate(samplerate);
+        // 封装视频信息
+        VideoMetaInfo videoMetaInfo = new VideoMetaInfo();
+        videoMetaInfo.setFormat(videoFormat);
+        videoMetaInfo.setSize(videoSize);
+        videoMetaInfo.setBitRate(videoBitrate);
+        videoMetaInfo.setDuration(duration);
+        videoMetaInfo.setEncoder(videoEncoder);
+        videoMetaInfo.setFrameRate(videoFramerate);
+        videoMetaInfo.setHeight(videoHeight);
+        videoMetaInfo.setWidth(videoWidth);
+        videoMetaInfo.setMusicMetaInfo(musicMetaInfo);
+
+        return videoMetaInfo;
+    }
     //
     // /**
     //  * 获取视频的基本信息（从流中）
@@ -705,12 +702,12 @@ public class MediaUtil {
     //     musicMetaInfo.setSize(musicSize);
 	// 	return musicMetaInfo;
 	// }
-
-    /**
-     * 获取音频的基本信息（从流中）
-     * @param inputStream 源音乐流路径
-     * @return 音频基本信息，解码出错时返回null
-     */
+    //
+    // /**
+    //  * 获取音频的基本信息（从流中）
+    //  * @param inputStream 源音乐流路径
+    //  * @return 音频基本信息，解码出错时返回null
+    //  */
     // public static MusicMetaInfo getMusicMetaInfo(InputStream inputStream) {
 	//     MusicMetaInfo musicMetaInfo = new MusicMetaInfo();
     //     try {
@@ -727,14 +724,14 @@ public class MediaUtil {
     //         return null;
     //     }
     // }
-
-
-    /**
-     * 获取图片的基本信息（从流中）
-     *
-     * @param inputStream 源图片路径
-     * @return 图片的基本信息，获取信息失败时返回null
-     */
+    //
+    //
+    // /**
+    //  * 获取图片的基本信息（从流中）
+    //  *
+    //  * @param inputStream 源图片路径
+    //  * @return 图片的基本信息，获取信息失败时返回null
+    //  */
     // public static ImageMetaInfo getImageInfo(InputStream inputStream) {
     //     BufferedImage image = null;
     //     ImageMetaInfo imageInfo = new ImageMetaInfo();
@@ -806,7 +803,7 @@ public class MediaUtil {
 		List<String> commond = new ArrayList<String>();
 		commond.add("-i");
 		commond.add(inputFile.getAbsolutePath());
-		String executeResult = MediaUtil.executeCommand(commond);
+		String executeResult = executeCommandInfo(commond);
 		return executeResult;
 	}
 
@@ -832,25 +829,25 @@ public class MediaUtil {
      * @param outputPath 生成的gif文件名（包含路径）
      * @param playTime 播放的延迟时间，可调整gif的播放速度
      */
-	// private static void createGifImage(String image[], String outputPath, int playTime) {
-    //     if (null == outputPath) {
-    //         throw new RuntimeException("转换后的GIF路径为空，请检查转换后的GIF存放路径是否正确");
-    //     }
-	// 	try {
-	// 		AnimatedGifEncoder encoder = new AnimatedGifEncoder();
-	// 		encoder.setRepeat(0);
-	// 		encoder.start(outputPath);
-	// 		BufferedImage src[] = new BufferedImage[image.length];
-	// 		for (int i = 0; i < src.length; i++) {
-	// 			encoder.setDelay(playTime); // 设置播放的延迟时间
-	// 			src[i] = ImageIO.read(new File(image[i])); // 读入需要播放的jpg文件
-	// 			encoder.addFrame(src[i]); // 添加到帧中
-	// 		}
-	// 		encoder.finish();
-	// 	} catch (Exception e) {
-	// 		log.error("--- 多张静态图转换成动态GIF图的过程出错 --- 错误信息： " + e.getMessage());
-	// 	}
-	// }
+	private static void createGifImage(String image[], String outputPath, int playTime) {
+        if (null == outputPath) {
+            throw new RuntimeException("转换后的GIF路径为空，请检查转换后的GIF存放路径是否正确");
+        }
+		try {
+			AnimatedGifEncoder encoder = new AnimatedGifEncoder();
+			encoder.setRepeat(0);
+			encoder.start(outputPath);
+			BufferedImage src[] = new BufferedImage[image.length];
+			for (int i = 0; i < src.length; i++) {
+				encoder.setDelay(playTime); // 设置播放的延迟时间
+				src[i] = ImageIO.read(new File(image[i])); // 读入需要播放的jpg文件
+				encoder.addFrame(src[i]); // 添加到帧中
+			}
+			encoder.finish();
+		} catch (Exception e) {
+			log.error("--- 多张静态图转换成动态GIF图的过程出错 --- 错误信息： " + e.getMessage());
+		}
+	}
 
 
     /**
@@ -865,18 +862,109 @@ public class MediaUtil {
 	}
 
     public static void main(String[] args) throws Exception{
-        boolean executable = isExecutable();
-        System.out.println(executable);
+        // boolean executable = isExecutable();
+        // System.out.println(executable);
 
         // vodieToPcm("D:/data/images/22条商规.mp3", "D:/data/images/22条商规2pcm.pcm", FFMPEG_PATH);
 
-        File videoFile = new File("D:/data/images/fjsp.mp4");
-        File audioFile = new File("D:/data/images/fjsp1mp3.mp3");
-        File videoFile2 = new File("D:/data/images/fjsp1mp4.mp4");
+        String videoPath = "D:/data/video/xiaoxia-3828.mp4";
+        String mp3Path = "D:/data/video/xiaoxia-3828.mp3";
+        String mp4VideoPath = "D:/data/video/xiaoxia-3828mp4.mp4";
+        String newVideoPath = "D:/data/video/xiaoxia-3828-05.mp4";
+        File videoFile = new File(videoPath);
+        File audioFile = new File(mp3Path);
+        // File videoFile2 = new File(mp4VideoPath);
 
-//        getAudioFromVideo(videoFile, audioFile, 1);
-//         getAudioFromVideo(videoFile, videoFile2, 0);
-        avMerge("D:/data/images/fjsp1mp4.mp4", "D:/data/images/fjsp1mp3.mp3", "D:/data/images/fjsp1mp3mp4.mp4");
+        // cutVideoFrame(videoFile, imageFile, new Time(0, 3, 0));
+
+        // VideoMetaInfo videoMetaInfo = getVideoMetaInfo(videoFile);
+        // System.out.println("视频信息："+videoMetaInfo);
+        // cutVideo(videoFile, videoFile2, DEFAULT_TIME, 30);
+
+        getAudioFromVideo(videoFile, audioFile, 1);
+        // getAudioFromVideo(videoFile, videoFile2, 0);
+        AudioUtils.speechPitchShiftMp3(mp3Path, 0.5, 0.5, "D:/data/video/mp3pcm.pcm");
+        AudioUtils.convertAudioFiles("D:/data/video/mp3pcm.pcm", mp3Path, 8000);
+
+        avMerge(mp4VideoPath, mp3Path, newVideoPath);
+    }
+
+
+    private static boolean executeCommand(List<String> commonds){
+        LinkedList<String> ffmpegCmds = new LinkedList<>(commonds);
+        ffmpegCmds.addFirst(FFMPEG_PATH); // 设置ffmpeg程序所在路径
+        log.info("--- 待执行的FFmpeg指令为：---" + ffmpegCmds);
+        Runtime runtime = Runtime.getRuntime();
+        Process ffmpeg = null;
+        try {
+            ProcessBuilder builder = new ProcessBuilder(ffmpegCmds);
+            // builder.command(commonds);
+            ffmpeg = builder.start();
+            doWaitFor(ffmpeg);
+//				ffmpeg.destroy();
+            //new File(oldfilepath).delete();
+            return true;
+        } catch (Exception e) {
+            log.error("--- FFmpeg命令执行出错！ --- 出错信息： " + e.getMessage());
+            return false;
+        } finally {
+            if (null != ffmpeg) {
+                ProcessKiller ffmpegKiller = new ProcessKiller(ffmpeg);
+                // JVM退出时，先通过钩子关闭FFmepg进程
+                runtime.addShutdownHook(ffmpegKiller);
+            }
+        }
+    }
+
+    private static int doWaitFor(Process p) {
+        InputStream in = null;
+        InputStream err = null;
+        int exitValue = -1; // returned to caller when p is finished
+        try {
+            System.out.println("comeing");
+            in = p.getInputStream();
+            err = p.getErrorStream();
+            boolean finished = false; // Set to true when p is finished
+
+            while (!finished) {
+                try {
+                    while (in.available() > 0) {
+                        Character c = new Character((char) in.read());
+                        System.out.print(c);
+                    }
+                    while (err.available() > 0) {
+                        Character c = new Character((char) err.read());
+                        System.out.print(c);
+                    }
+
+                    exitValue = p.exitValue();
+                    finished = true;
+
+                } catch (IllegalThreadStateException e) {
+                    Thread.currentThread().sleep(500);
+                }
+            }
+        } catch (Exception e) {
+            System.err.println("doWaitFor();: unexpected exception - "
+                    + e.getMessage());
+        } finally {
+            try {
+                if (in != null) {
+                    in.close();
+                }
+
+            } catch (IOException e) {
+                System.out.println(e.getMessage());
+            }
+            if (err != null) {
+                try {
+                    err.close();
+                } catch (IOException e) {
+                    System.out.println(e.getMessage());
+                }
+            }
+        }
+        return exitValue;
     }
 
     /**
@@ -952,6 +1040,9 @@ public class MediaUtil {
             commond.add(vedioUrl);
             commond.add("-i");
             commond.add(audioUrl);
+            commond.add("-f");
+            commond.add("mp4");
+            commond.add("-y");
             commond.add(newvideoUrl);
             executeCommand(commond);
         } catch (Exception e) {

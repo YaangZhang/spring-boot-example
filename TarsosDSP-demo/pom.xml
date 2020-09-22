@@ -48,6 +48,23 @@
             <artifactId>animated-gif-lib</artifactId>
             <version>1.4</version>
         </dependency>
+
+        <!-- https://mvnrepository.com/artifact/com.google.guava/guava -->
+        <dependency>
+            <groupId>com.google.guava</groupId>
+            <artifactId>guava</artifactId>
+            <version>22.0</version>
+        </dependency>
+
+
+        <!-- https://mvnrepository.com/artifact/com.google.common/google-collect -->
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <optional>true</optional>
+            <version>1.16.18</version>
+        </dependency>
+
     </dependencies>
 
 </project>

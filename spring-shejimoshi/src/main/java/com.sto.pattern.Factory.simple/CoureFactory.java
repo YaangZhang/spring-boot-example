@@ -17,7 +17,6 @@ public class CoureFactory {
      public ICoure create2(Class<? extends ICoure> className){
          if (null != className) {
              try {
-                 Class.forName()
                  return className.newInstance();
              } catch (Exception e) {
                  e.printStackTrace();
