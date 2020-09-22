@@ -870,12 +870,13 @@ public class MediaUtil {
 
         // vodieToPcm("D:/data/images/22条商规.mp3", "D:/data/images/22条商规2pcm.pcm", FFMPEG_PATH);
 
-        File videoFile = new File("D:/data/images/bxqy.mp4");
-        File audioFile = new File("D:/data/images/bxqy3.mp3");
-        File videoFile2 = new File("D:/data/images/bxqymp42.mp4");
-        getAudioFromVideo(videoFile, audioFile, 1);
-        // getAudioFromVideo(videoFile, videoFile2, 0);
-        avMerge("D:/data/images/testmp42.mp4", "D:/data/images/test2mp3.mp3", "D:/data/images/testmp3mp4.mp4");
+        File videoFile = new File("D:/data/images/fjsp.mp4");
+        File audioFile = new File("D:/data/images/fjsp1mp3.mp3");
+        File videoFile2 = new File("D:/data/images/fjsp1mp4.mp4");
+
+//        getAudioFromVideo(videoFile, audioFile, 1);
+//         getAudioFromVideo(videoFile, videoFile2, 0);
+        avMerge("D:/data/images/fjsp1mp4.mp4", "D:/data/images/fjsp1mp3.mp3", "D:/data/images/fjsp1mp3mp4.mp4");
     }
 
     /**
