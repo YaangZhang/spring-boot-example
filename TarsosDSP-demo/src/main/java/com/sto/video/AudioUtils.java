@@ -2,6 +2,9 @@ package com.sto.video;
 
 import be.tarsos.dsp.AudioDispatcher;
 import be.tarsos.dsp.WaveformSimilarityBasedOverlapAdd;
+import be.tarsos.dsp.ZeroCrossingRateProcessor;
+import be.tarsos.dsp.effects.DelayEffect;
+import be.tarsos.dsp.effects.FlangerEffect;
 import be.tarsos.dsp.io.TarsosDSPAudioFormat;
 import be.tarsos.dsp.io.jvm.AudioDispatcherFactory;
 import be.tarsos.dsp.io.jvm.AudioPlayer;
@@ -156,9 +159,8 @@ public class AudioUtils {
 
         /**镶边效果 -- 有反应 **/
         // dispatcher.addAudioProcessor(new FlangerEffect(64, 0.3, 16000, 16000));// 回声效果
-//        dispatcher.addAudioProcessor(new FlangerEffect(1 << 4, 0.8, 8000, 2000));// 感冒
-//        dispatcher.addAudioProcessor(new ZeroCrossingRateProcessor());//感冒
-
+       // dispatcher.addAudioProcessor(new FlangerEffect(1 << 4, 0.8, 8000, 2000));// 感冒
+       dispatcher.addAudioProcessor(new ZeroCrossingRateProcessor());//感冒
         /** 淡出 --声音慢慢变小 **/
 //        dispatcher.addAudioProcessor(new FadeOut(5));
 
@@ -166,7 +168,7 @@ public class AudioUtils {
 //        dispatcher.addAudioProcessor(new FadeIn(5));
 
         /** 在信号上添加回声效果。echoLength以秒为单位  elay回声的衰减，介于0到1之间的值。1表示无衰减，0表示立即衰减 **/
-        // dispatcher.addAudioProcessor(new DelayEffect(0.2, 0.24, 12000) );
+        dispatcher.addAudioProcessor(new DelayEffect(0.2, 0.24, 12000) );
 
         /** 调幅噪声 -- 将声音转换为噪声**/
 //        dispatcher.addAudioProcessor(new AmplitudeModulatedNoise());

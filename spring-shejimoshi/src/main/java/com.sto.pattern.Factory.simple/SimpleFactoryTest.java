@@ -10,7 +10,7 @@ public class SimpleFactoryTest {
         ICoure java = factory.create("java");
         java.record();
 
-        ICoure factory2 = factory.create2("com.sto.pattern.Factory.simple.JavaCoure");
-        factory2.record();
+        // ICoure factory2 = factory.create2(SimpleFactoryTest.class);
+        // factory2.record();
     }
 }
