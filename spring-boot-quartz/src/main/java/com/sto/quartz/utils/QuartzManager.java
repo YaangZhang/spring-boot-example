@@ -40,6 +40,9 @@ public class QuartzManager {
                     .getClass());
             JobDetail jobDetail = JobBuilder.newJob(jobClass).withIdentity(task.getJobName(), task.getJobGroup())// 任务名称和组构成任务key
                     .build();
+
+            //添加任务详情
+            jobDetail.getJobDataMap().put(jobClass.getName(), task.toString());
             // 定义调度触发规则
             // 使用cornTrigger规则
             Trigger trigger = TriggerBuilder.newTrigger().withIdentity(task.getJobName(), task.getJobGroup())// 触发器key

@@ -21,7 +21,7 @@ import static com.sto.quartz.push.AppInfo.*;
 public class PushMessageToAppDemo {
 
     public static void main(String[] args) {
-        String taskId = pushMessageToApp();
+        String taskId = pushMessageToApp("标题", "内容你好！", "1234567890");
         System.out.println(taskId); // contentId -> OSA-0916_iClXIXOoQD6sazZnnH8456  contentId=OSA-0917_LhWdKveln776rC2t81rIn1
        getScheduleTask(taskId);
 //        delScheduleTask(taskId);
@@ -36,9 +36,9 @@ public class PushMessageToAppDemo {
      * 场景3，按按照tag推送
      * @return
      */
-    private static String pushMessageToApp() {
+    public static String pushMessageToApp(String title, String text, String content) {
         // LinkTemplate template = PushTemplate.getLinkTemplate();
-        NotificationTemplate template = PushTemplate.getNotificationTemplate("sdhfgj");
+        NotificationTemplate template = PushTemplate.getNotificationTemplate(title, text, content);
         AppMessage message = new AppMessage();
         message.setData(template);
         message.setOffline(true);

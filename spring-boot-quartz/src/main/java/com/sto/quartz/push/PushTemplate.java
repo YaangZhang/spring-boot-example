@@ -17,7 +17,7 @@ import static com.sto.quartz.push.AppInfo.*;
 public class PushTemplate {
 
     public static void main(String[] args) {
-        getNotificationTemplate("的工号的人头发很多人头发");
+        getNotificationTemplate("标题11","内容你好","的工号的人头发很多人头发");
 //        getLinkTemplate();
 //        getTransmissionTemplate();
 //        getStartActivityTemplate();
@@ -29,13 +29,13 @@ public class PushTemplate {
      * 通知模板(点击后续行为: 支持打开应用、发送透传内容、打开应用同时接收到透传 这三种行为)
      * @return
      */
-    public static NotificationTemplate getNotificationTemplate(String content) {
+    public static NotificationTemplate getNotificationTemplate(String title, String text, String content) {
         NotificationTemplate template = new NotificationTemplate();
         // 设置APPID与APPKEY
         template.setAppId(APPID);
         template.setAppkey(APPKEY);
         //设置展示样式
-        template.setStyle(PushStyle.getStyle0("标题", "内容你好！"));
+        template.setStyle(PushStyle.getStyle0(title, text));
         template.setTransmissionType(1);  // 透传消息设置，收到消息是否立即启动应用： 1为立即启动，2则广播等待客户端自启动
         template.setTransmissionContent(content);
 //        template.setSmsInfo(PushSmsInfo.getSmsInfo()); //短信补量推送
