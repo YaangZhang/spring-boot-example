@@ -7,6 +7,7 @@ import com.gexin.rp.sdk.base.impl.AppMessage;
 import com.gexin.rp.sdk.base.uitls.AppConditions;
 import com.gexin.rp.sdk.exceptions.PushAppException;
 import com.gexin.rp.sdk.template.NotificationTemplate;
+import com.gexin.rp.sdk.template.TransmissionTemplate;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -21,9 +22,9 @@ import static com.sto.quartz.push.AppInfo.*;
 public class PushMessageToAppDemo {
 
     public static void main(String[] args) {
-        String taskId = pushMessageToApp("标题", "内容你好！", "1234567890");
-        System.out.println(taskId); // contentId -> OSA-0916_iClXIXOoQD6sazZnnH8456  contentId=OSA-0917_LhWdKveln776rC2t81rIn1
-       getScheduleTask(taskId);
+        String taskId = pushMessageToApp("标题555", "内容你好！", "123456789mnvb");
+        // System.out.println(taskId); // contentId -> OSA-0916_iClXIXOoQD6sazZnnH8456  contentId=OSA-0917_LhWdKveln776rC2t81rIn1
+       getScheduleTask(taskId);// {result=Success, taskDetail={"desc":"find_noscheduletask","status":66}, taskId=}
 //        delScheduleTask(taskId);
 //        stopTask(taskId);
     }
@@ -38,6 +39,7 @@ public class PushMessageToAppDemo {
      */
     public static String pushMessageToApp(String title, String text, String content) {
         // LinkTemplate template = PushTemplate.getLinkTemplate();
+        // TransmissionTemplate template = PushTemplate.getTransmissionTemplate(content);
         NotificationTemplate template = PushTemplate.getNotificationTemplate(title, text, content);
         AppMessage message = new AppMessage();
         message.setData(template);
@@ -65,7 +67,7 @@ public class PushMessageToAppDemo {
         //手机类型
         List<String> phoneTypeList = new ArrayList<String>();
         phoneTypeList.add("IOS");
-        phoneTypeList.add("ANDROID");
+        // phoneTypeList.add("ANDROID");
 
         //地区
         List<String> regionList = new ArrayList<String>();
@@ -92,12 +94,12 @@ public class PushMessageToAppDemo {
         age.add("0000");
 
         //条件交并补功能, 默认是与
-        cdt.addCondition(AppConditions.PHONE_TYPE, phoneTypeList, AppConditions.OptType.or);
+        cdt.addCondition(AppConditions.PHONE_TYPE, phoneTypeList);
         // cdt.addCondition(AppConditions.REGION, regionList, AppConditions.OptType.or);
         // cdt.addCondition(AppConditions.TAG, tagList, AppConditions.OptType.not);
         // cdt.addCondition("job", jobs);
         // cdt.addCondition("age", age);
-        // message.setConditions(cdt);
+        message.setConditions(cdt);
 
         IPushResult ret = null;
         try {

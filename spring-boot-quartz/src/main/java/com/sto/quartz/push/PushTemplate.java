@@ -70,7 +70,7 @@ public class PushTemplate {
      * 客户端可自定义通知的展现形式，也可自定义通知到达之后的动作，或者不做任何展现。
      * @return
      */
-    public static TransmissionTemplate getTransmissionTemplate() {
+    public static TransmissionTemplate getTransmissionTemplate(String content) {
         TransmissionTemplate template = new TransmissionTemplate();
         // 设置APPID与APPKEY
         template.setAppId(APPID);
@@ -78,7 +78,7 @@ public class PushTemplate {
 
         //透传消息设置，1为强制启动应用，客户端接收到消息后就会立即启动应用；2为等待应用启动
         template.setTransmissionType(1);
-        template.setTransmissionContent("透传内容"); //透传内容
+        template.setTransmissionContent(content); //透传内容
         template.setAPNInfo(getAPNPayload()); //ios消息推送
 //        template.setAPNInfo(getVoIPPayload());
 //        template.setSmsInfo(PushSmsInfo.getSmsInfo()); //短信补量推送

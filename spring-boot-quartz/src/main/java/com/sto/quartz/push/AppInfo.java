@@ -13,6 +13,9 @@ public class AppInfo {
     public static final String APPID = "vxw0zGY6OHAZmekTstOz5A";
     public static final String APPKEY = "4seFcVvReY6fVUrLG6ykl6";
     public static final String MASTERSECRET = "ejxe3BPHufAQhnowkTJvV9";
+    // public static final String APPID = "xvslVXqclB8X1xR64o2o9";
+    // public static final String APPKEY = "6k2JUHot4V5g2JxvwLmae";
+    // public static final String MASTERSECRET = "u5Xi1EpbGcAcraEMkzRLk9";
 
     public static final String CID = "69b287ce1477f082f7e32da031877c40";
     public static final String CID_2 = "8c1f751db0c3104829a9768dc6de7d77";
