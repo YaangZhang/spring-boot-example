@@ -10,6 +10,8 @@
  */
 package com.sto.suanfa.map;
 
+import java.util.Set;
+
 /**
  * 〈一句话功能简述〉<br> 
  * 〈〉
@@ -19,4 +21,27 @@ package com.sto.suanfa.map;
  * @since 1.0.0
  */
 public class MyMapTest {
+    public static void main(String[] args) {
+        MyMap<String, String> myMap1 = new MyMap();
+        System.out.println(myMap1.threshold);
+        System.out.println(myMap1.loadFactor());
+        System.out.println( myMap1.capacity());
+        myMap1.put("key1", "value1");
+        System.out.println(myMap1.threshold);
+        System.out.println( myMap1.capacity());
+
+        MyMap<String, String> myMap = new MyMap(8, 0.5F);
+        System.out.println(myMap.threshold);
+        System.out.println(myMap.loadFactor());
+        System.out.println( myMap.capacity());
+        myMap.put("key1", "value1");
+        String value1 = myMap.get("key1");
+        float v = myMap.loadFactor();
+        System.out.println(v);
+        System.out.println( myMap.capacity());
+        System.out.println(myMap.threshold);
+        Set<String> keySet = myMap.keySet();
+
+
+    }
 }
