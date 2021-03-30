@@ -72,4 +72,18 @@ public abstract class AbstractCodisLocker<T extends JedisCommands> implements Lo
 		this.timeout = expireTime;
 		return this;
 	}
+
+
+	private static final String LOCK_SUCCESS = "OK";
+	private static final String SET_IF_NOT_EXIST = "NX";
+	private static final String SET_WITH_EXPIRE_TIME = "PX";
+
+	public boolean lock(String lockKey, String requestId, long expireTime){
+		T jedis = getRedis();
+		String result = jedis.set(lockKey, requestId, SET_IF_NOT_EXIST, SET_WITH_EXPIRE_TIME, expireTime);
+		if (LOCK_SUCCESS.equals(result)) {
+			return true;
+		}
+		return false;
+	}
 }

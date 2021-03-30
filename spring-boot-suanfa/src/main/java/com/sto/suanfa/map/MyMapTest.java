@@ -10,6 +10,7 @@
  */
 package com.sto.suanfa.map;
 
+import java.util.HashSet;
 import java.util.Set;
 
 /**
@@ -35,13 +36,17 @@ public class MyMapTest {
         System.out.println(myMap.loadFactor());
         System.out.println( myMap.capacity());
         myMap.put("key1", "value1");
+        myMap.put("key2", "value1");
+        myMap.put("key3", "value1");
+        myMap.put("key4", "value1");
         String value1 = myMap.get("key1");
         float v = myMap.loadFactor();
         System.out.println(v);
         System.out.println( myMap.capacity());
         System.out.println(myMap.threshold);
         Set<String> keySet = myMap.keySet();
-
+        String next = keySet.iterator().next();
+        System.out.println(next);
 
     }
 }

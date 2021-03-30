@@ -132,4 +132,26 @@ public class DistributedLock {
         }
         return 0;
     }
+
+
+    public <E> E execute2(DistributedTask<E> task, String id, final int retryCount, long delayTime, long expiredTime) throws InterruptedException, NotFetchLockException {
+        final String key = getLockerId(id);
+        boolean getLock = false;
+        int cnt = retryCount;
+        while (!getLock && (retryCount == -1 || cnt-- > 0)) {
+            getLock = locker.lock(key,"11111", expiredTime);
+            if (getLock) {
+                try {
+                    System.out.println("拿到鎖了");
+                    return task.run();
+                } finally {
+                    System.out.println("ok");;
+                }
+            }
+            Thread.sleep(delayTime);
+        }
+
+        log.warn("not fetch lock for id={} retryCount={} delayTime(ms)={}", id, retryCount, delayTime);
+        return null;
+    }
 }

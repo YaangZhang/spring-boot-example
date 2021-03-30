@@ -10,6 +10,10 @@
  */
 package com.sto.suanfa.queue;
 
+import java.util.concurrent.ArrayBlockingQueue;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.locks.ReentrantLock;
+
 /**
  * 〈一句话功能简述〉<br> 
  * 〈〉
@@ -62,13 +66,21 @@ public class ArrayQueue {
     }
 
     public static void main(String[] args) {
+        ArrayBlockingQueue arrQueue = new ArrayBlockingQueue(12);
         ArrayQueue queue = new ArrayQueue(5);
+        ThreadLocal<ArrayQueue> local = new ThreadLocal<>();
+        local.set(queue);
+
+        ReentrantLock lock = new ReentrantLock();
+        ConcurrentHashMap map = new ConcurrentHashMap();
+
         boolean a = queue.enqueue("a");
         System.out.println(queue);
          boolean b = queue.enqueue("b");
         System.out.println(queue);
          boolean c = queue.enqueue("c");
         System.out.println(queue);
+        System.out.println(local.get());
         System.out.println("出队 head = "+queue.head);
         String dequeue = queue.dequeue();
         System.out.println("出队："+dequeue+", head = "+queue.head);

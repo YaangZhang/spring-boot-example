@@ -35,4 +35,7 @@ public interface Locker {
      * @param expireTime ms
      */
     Locker setTimeOut(long expireTime);
+
+
+    boolean lock(String lockKey, String requestId, long expireTime);
 }

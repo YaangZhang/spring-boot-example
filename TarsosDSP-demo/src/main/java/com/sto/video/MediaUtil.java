@@ -867,13 +867,14 @@ public class MediaUtil {
 
         // vodieToPcm("D:/data/images/22条商规.mp3", "D:/data/images/22条商规2pcm.pcm", FFMPEG_PATH);
 
-        String videoPath = "D:/data/video/xiaoxia-3828.mp4";
-        String mp3Path = "D:/data/video/xiaoxia-3828.mp3";
-        String mp4VideoPath = "D:/data/video/xiaoxia-3828mp4.mp4";
-        String newVideoPath = "D:/data/video/xiaoxia-3828-05.mp4";
+        String videoPath = "D:/data/video/part2.mp4";
+        String mp3Path = "D:/data/video/part2mp3.mp3";
+        String mp3Path2 = "D:/data/video/part2mp3-2.mp3";
+        String mp4VideoPath = "D:/data/video/part2mp4.mp4";
+        String newVideoPath = "D:/data/video/part2mp4new.mp4";
         File videoFile = new File(videoPath);
         File audioFile = new File(mp3Path);
-        // File videoFile2 = new File(mp4VideoPath);
+        File videoFile2 = new File(mp4VideoPath);
 
         // cutVideoFrame(videoFile, imageFile, new Time(0, 3, 0));
 
@@ -881,12 +882,12 @@ public class MediaUtil {
         // System.out.println("视频信息："+videoMetaInfo);
         // cutVideo(videoFile, videoFile2, DEFAULT_TIME, 30);
 
-        getAudioFromVideo(videoFile, audioFile, 1);
+        // getAudioFromVideo(videoFile, audioFile, 1);
         // getAudioFromVideo(videoFile, videoFile2, 0);
-        AudioUtils.speechPitchShiftMp3(mp3Path, 0.5, 0.5, "D:/data/video/mp3pcm.pcm");
-        AudioUtils.convertAudioFiles("D:/data/video/mp3pcm.pcm", mp3Path, 8000);
+        AudioUtils.speechPitchShiftMp3(mp3Path, 1.2, 0.7, "D:/data/video/mp3pcm.pcm");
+        AudioUtils.convertAudioFiles("D:/data/video/mp3pcm.pcm", mp3Path2, 8000);
 
-        avMerge(mp4VideoPath, mp3Path, newVideoPath);
+        avMerge(mp4VideoPath, mp3Path2, newVideoPath);
     }
 
 
