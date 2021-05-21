@@ -3,6 +3,7 @@ package com.sto.quartz.mapper;
 import com.sto.quartz.model.TaskDO;
 import com.sto.quartz.model.vo.TaskVO;
 import org.apache.ibatis.annotations.Param;
+import org.springframework.stereotype.Component;
 
 import java.util.List;
 
@@ -12,6 +13,7 @@ import java.util.List;
  * @date 2018年6月29日
  * @website www.laoyeye.net
  */
+@Component
 public interface TaskMapper {
 
     TaskDO get(Long id);

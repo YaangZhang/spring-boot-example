@@ -17,7 +17,7 @@ import java.util.Set;
 public class TestRedisService {
 
 	@Autowired
-	private RedisService redisService;
+    private RedisService redisService;
 
 	@Autowired
 	private RedisService2 redisService2;
@@ -31,8 +31,9 @@ public class TestRedisService {
     }
  @Test
     public void testString() throws Exception {
-        redisService.set("neo", "ityouknow");
-        Assert.assertEquals("ityouknow", redisService.get("neo"));
+        redisService.set("HELLO", "ityouknow");
+     Object neo = redisService.get("neonn");
+     Assert.assertEquals("ityouknow", neo);
     }
 
     @Test

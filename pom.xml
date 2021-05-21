@@ -22,6 +22,10 @@
         <module>spring-boot-redis</module>
         <module>springboot-mybatis</module>
         <module>spring-boot-mybatis</module>
+        <module>spring-boot-mybatis-annotation</module>
+        <module>spring-boot-multi-mybatis-anno-druid</module>
+        <module>spring-boot-multi-mybatis-annotation</module>
+        <module>spring-boot-mybatisplus</module>
         <module>spring-boot-mongodb</module>
         <module>spring-boot-es</module>
         <module>spring-boot-suanfa</module>
@@ -31,6 +35,8 @@
         <module>spring-aop</module>
         <module>spring-shejimoshi</module>
         <module>spring-boot-quartz</module>
+        <module>oauth</module>
+        <module>spring-boot-websocket</module>
     </modules>
 
     <dependencyManagement>
