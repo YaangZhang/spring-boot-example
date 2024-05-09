@@ -37,6 +37,7 @@
         <module>spring-boot-quartz</module>
         <module>oauth</module>
         <module>spring-boot-websocket</module>
+        <module>ddd-dp</module>
     </modules>
 
     <dependencyManagement>
@@ -63,6 +64,7 @@
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>
+
         </dependencies>
     </dependencyManagement>
 
