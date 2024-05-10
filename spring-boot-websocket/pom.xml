@@ -36,7 +36,6 @@
             <scope>runtime</scope>
         </dependency>
         <dependency>
-            <!-- fastjson -->
             <groupId>com.alibaba</groupId>
             <artifactId>fastjson</artifactId>
             <version>1.2.47</version>

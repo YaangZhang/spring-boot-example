@@ -7,6 +7,9 @@ public class PhoneNumber {
 
     private final String number;
 
+    public String getNumber() {
+        return number;
+    }
 
     public PhoneNumber(String number) {
         if (number == null) {
@@ -17,9 +20,9 @@ public class PhoneNumber {
         this.number = number;
     }
 
-    public String getAreaCode(String phone){
-        for (int i = 0; i < phone.length(); i++) {
-            String prefix = phone.substring(0, i);
+    public String getAreaCode(){
+        for (int i = 0; i < number.length(); i++) {
+            String prefix = number.substring(0, i);
             if (isAreaCode(prefix)) {
                 return prefix;
             }

@@ -1,5 +1,6 @@
 package com.chagee.service.impl;
 
+import com.chagee.domain.PhoneNumber;
 import com.chagee.domain.SalesRep;
 import com.chagee.domain.User;
 import com.chagee.repository.SalesRepRepository;
@@ -10,6 +11,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
 import javax.validation.ValidationException;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import java.util.Arrays;
 
 @Service
@@ -56,9 +59,27 @@ public class RegistrationServiceImpl implements RegistrationService {
         String[] areas = new String[]{"0571", "021"};
         return Arrays.asList(areas).contains(prefix);
     }
-
     private boolean isValidPhoneNumber(String phone) {
         String pattern = "^0[1-9]{2,3}-?\\d{8}$";
         return phone.matches(pattern);
+    }
+
+    @Override
+    public User register(@NotBlank String name, @NotNull PhoneNumber phone, @NotBlank String address) {
+
+        // 取电话号里的区号，然后通过区号找到区域内的SalesRep
+        String areaCode = phone.getAreaCode();
+        SalesRep rep = salesRepRepo.findRep(areaCode);
+
+        // 最后创建用户，落盘，然后返回
+        User user = new User();
+        user.setName(name);
+        user.setPhone(phone.getNumber());
+        user.setAddress(address);
+        if (rep != null) {
+            user.setRepId(rep.getRepId());
+        }
+
+        return userRepo.save(user);
     }
 }

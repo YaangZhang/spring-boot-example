@@ -2,8 +2,15 @@
 <project version="4">
   <component name="Encoding" native2AsciiForPropertiesFiles="true" defaultCharsetForPropertiesFiles="UTF-8">
     <file url="file://$PROJECT_DIR$/banner/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/ddd-dp/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/ddd-dp/src/main/resources" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/ddd/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/ddd/src/main/resources" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/spring-boot-bigdata/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/spring-boot-ddd/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/spring-boot-ddd/src/main/resources" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/spring-boot-es/spring-data-elasticsearch/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/spring-boot-es/spring-data-elasticsearch/src/main/resources" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/spring-boot-es/spring-data-esRepo/src/main/java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/spring-boot-es/spring-data-esRepo/src/main/resources" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/spring-boot-es/spring-elasticsearch/src/main/java" charset="UTF-8" />
@@ -11,6 +18,7 @@
     <file url="file://$PROJECT_DIR$/spring-boot-es/src/main/java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/spring-boot-es/src/main/resources" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/spring-boot-hello/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/spring-boot-hello/src/main/resources" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/spring-boot-jdbc/src/main/java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/spring-boot-jsp/src/main/java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/spring-boot-mongodb/src/main/java" charset="UTF-8" />
@@ -19,6 +27,7 @@
     <file url="file://$PROJECT_DIR$/spring-boot-mybatis-annotation/src/main/java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/spring-boot-mybatis/src/main/java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/spring-boot-mybatisplus/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/spring-boot-quartz/src/main/resources" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/spring-boot-redis/src/main/java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/spring-boot-suanfa/src/main/java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/spring-boot-upload/src/main/java" charset="UTF-8" />
@@ -27,6 +36,7 @@
     <file url="file://$PROJECT_DIR$/spring-boot-websocket/src/main/java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/spring-boot-websocket/src/main/resources" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/springboot-mybatis/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/springboot-websocket/src/main/java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/../../tools/repository/org/springframework/boot/spring-boot-starter-parent/2.1.4.RELEASE/src/main/resources" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/../../tools/repository/org/springframework/boot/spring-boot-starter-parent/2.1.5.RELEASE/src/main/resources" charset="UTF-8" />
     <file url="PROJECT" charset="UTF-8" />

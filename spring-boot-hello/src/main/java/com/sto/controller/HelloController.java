@@ -14,7 +14,7 @@ public class HelloController {
     }
 
     /**
-     * http://localhost:8071/hi?hi=rose
+     * http://localhost:8071/hi?name=rose
      * @param name
      * @return
      */
